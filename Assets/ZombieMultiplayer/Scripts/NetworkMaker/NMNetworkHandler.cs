@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 namespace NetworkMaker
 {
     /// <summary>
@@ -41,8 +42,8 @@ namespace NetworkMaker
         /// </summary>
         public int minPlayers;
         [Header("Scenes to use")]
-        public string lobbySceneToUse;
-        public string gameSceneToUse;
+        [SerializeField] public string lobbySceneToUse;
+        [SerializeField] public string gameSceneToUse;
         [Header("Related UI")]
         Button startServerButton;
         Button startGameButton;
