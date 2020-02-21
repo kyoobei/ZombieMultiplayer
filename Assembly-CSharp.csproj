@@ -69,6 +69,7 @@
     <Compile Include="Assets\ZombieMultiplayer\Scripts\NetworkMaker\NMLobbyManager.cs" />
     <Compile Include="Assets\ZombieMultiplayer\Scripts\NetworkMaker\NMNetworkHandler.cs" />
     <Compile Include="Assets\ZombieMultiplayer\Scripts\NetworkMaker\NMServerDiscovery.cs" />
+    <Compile Include="Assets\ZombieMultiplayer\Scripts\UI\LobbyUIManager.cs" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>C:/Users/AGMartinez/Documents/UnityProjects/NetworkedGames/ZombieMultiplayer/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>

@@ -25,6 +25,7 @@ namespace NetworkMaker
         {
             //StartCoroutine(CleanupBroadcastedLANAddress());
             base.Initialize();
+            InitializeClientDiscovery();
         }
 
         public void InitializeClientDiscovery()

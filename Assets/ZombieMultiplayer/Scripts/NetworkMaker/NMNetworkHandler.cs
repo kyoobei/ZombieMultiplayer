@@ -41,26 +41,27 @@ namespace NetworkMaker
         /// Set a minimum number of player/s to start the game
         /// </summary>
         public int minPlayers;
+        [Header("Networked Prefabs")]
+        [SerializeField] GameObject playerClientPrefab;
+        [SerializeField] UnityEngine.Networking.NetworkLobbyPlayer lobbyPrefab;
         [Header("Scenes to use")]
         [SerializeField] public string lobbySceneToUse;
         [SerializeField] public string gameSceneToUse;
         [Header("Related UI")]
-        Button startServerButton;
-        Button startGameButton;
+        [SerializeField] Button startServerButton;
+        [SerializeField] Button startGameButton;
 
-        #region PRIVATE VARIABLE
-        #endregion
-
-        #region DELEGATES AND EVENTS
-        public delegate Action OnReadyForGameToStartEvent();
-        public event OnReadyForGameToStartEvent OnReadyForGameToStart;
-        #endregion
+        public bool IsDoneCreating 
+        {
+            get; set;
+        }
 
         public void Start()
         {
             if (_instance == null)
             {
                 _instance = this;
+                IsDoneCreating = false;
                 DontDestroyOnLoad(this.gameObject);
             }
             else if(_instance != null)
@@ -73,7 +74,7 @@ namespace NetworkMaker
                 //create an object that handles all server stuff
                 CreateAServerObject();
             }
-            else
+            else if(!isAServer)
             {
                 //create an object that handles all client stuff
                 CreateAClientObject();
@@ -113,6 +114,7 @@ namespace NetworkMaker
                 startGameButton.onClick.AddListener(_discovery.StopBroadcast);
 
             }
+            IsDoneCreating = true;
         }
         private protected void CreateAClientObject()
         {
@@ -121,6 +123,8 @@ namespace NetworkMaker
             NMClientDiscovery _discovery = clientObject.AddComponent<NMClientDiscovery>();
             InitValueOfLobbyManager(_lobbyManager);
             _discovery.showGUI = false;
+
+            IsDoneCreating = true;
         }
 
         private protected void InitValueOfLobbyManager(NMLobbyManager lobbyManager)
@@ -131,13 +135,15 @@ namespace NetworkMaker
             lobbyManager.minPlayers = (minPlayers.Equals(0)) ? NMDefaultConstants.DEFAULT_MIN_PLAYERCOUNT : minPlayers;
             lobbyManager.lobbyScene = lobbySceneToUse;
             lobbyManager.playScene = gameSceneToUse;
+
+            lobbyManager.playerPrefab = playerClientPrefab;
+            
+            if(lobbyPrefab != null)
+                lobbyManager.lobbyPlayerPrefab = lobbyPrefab;
+            
+            lobbyManager.autoCreatePlayer = false;
         }
         #endregion
-        #region CALLBACKS
-        public void OnPressGameStart()
-        {
-            OnReadyForGameToStart()?.Invoke();
-        }
-        #endregion
+
     }
 }

@@ -30,14 +30,16 @@ namespace NetworkMaker
                 lobbyManager = gameObject.GetComponent<NMLobbyManager>();
             }
 
-            base.Initialize();
-
             if (BroadcastOnStart)
+            {
+                base.Initialize();
                 StartAsServer();
+            }
         }
         public void OnClickStartBroadcast()
         {
             //start broadcasting
+            base.Initialize();
             StartAsServer();
         }
         public void OnClickStopBroadcast()
