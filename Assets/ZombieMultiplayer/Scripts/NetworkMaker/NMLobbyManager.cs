@@ -75,28 +75,27 @@ namespace NetworkMaker
                 hasRecievedABroadcast = true;
             }
         }
-        public void StartAsAClient()
+        public void InitiateServerStart()
         {
-            StartClient();
+            this.StartServer();
+            Debug.Log("has been called");
         }
-        public void StartAsAServer()
+        public void InitiateServerStop()
         {
-            StartServer();
-        }
-        public void GoToPlayScene()
-        {
-            ServerChangeScene(playScene);
-        }
-        public void GoToLobbyScene()
-        {
-            ServerChangeScene(lobbyScene);
+            StopServer();
         }
 
-        #region SERVER METHODS
-        #endregion
-        #region CLIENT METHODS
-
-        #endregion
-
+        public void InitiateClientStart()
+        {
+            //make sure a broadcast is recieved to set the IP and Port
+            //of the client
+            if(hasRecievedABroadcast && isInitialized)
+                StartClient();
+        }
+        
+        public void InitiateClientStop()
+        {
+            StopClient();
+        }
     }
 }

@@ -2,8 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 namespace NetworkMaker
 {
     /// <summary>
@@ -47,9 +45,16 @@ namespace NetworkMaker
         [Header("Scenes to use")]
         [SerializeField] public string lobbySceneToUse;
         [SerializeField] public string gameSceneToUse;
-        [Header("Related UI")]
-        [SerializeField] Button startServerButton;
-        [SerializeField] Button startGameButton;
+
+        delegate void OnPressedStartServerEvent();
+        delegate void OnPressedStopServerEvent();
+        delegate void OnPressedStartClientEvent();
+        delegate void OnPressedStopClientEvent();
+
+        event OnPressedStartServerEvent OnPressedStartServer;
+        event OnPressedStopServerEvent OnPressedStopServer;
+        event OnPressedStartClientEvent OnPressedStartClient;
+        event OnPressedStopClientEvent OnPressedStopClient;
 
         public bool IsDoneCreating 
         {
@@ -80,13 +85,15 @@ namespace NetworkMaker
                 CreateAClientObject();
             }
         }
-        #region METHODS FOR NETWORK OBJECT CREATION
-        private protected void CreateAServerObject()
+
+        #region VIRTUAL METHODS FOR SERVER/CLIENT CREATION
+        protected virtual void CreateAServerObject()
         {
             GameObject serverObject = new GameObject("SERVER_LobbyManager");
             NMLobbyManager _lobbyManager = serverObject.AddComponent<NMLobbyManager>();
             NMServerDiscovery _discovery = serverObject.AddComponent<NMServerDiscovery>();
 
+            AddEventsToServer(_lobbyManager);
             InitValueOfLobbyManager(_lobbyManager);
             _discovery.useNetworkManager = true;
             _discovery.showGUI = false;
@@ -94,40 +101,22 @@ namespace NetworkMaker
             {
                 _discovery.BroadcastOnStart = true;
             }
-            else
-            {
-                if(startServerButton != null)
-                    startServerButton.onClick.AddListener(_discovery.OnClickStartBroadcast);
-                else
-                {
-                    Debug.LogWarning("No Start button has been assigned.. reverting to automatic" +
-                        "broadcast");
-                    _discovery.BroadcastOnStart = true;
-                }
-            }
-            if(startGameButton == null)
-            {
-                Debug.LogError("No start game button");
-            }
-            else
-            {
-                startGameButton.onClick.AddListener(_discovery.StopBroadcast);
-
-            }
+            
             IsDoneCreating = true;
         }
-        private protected void CreateAClientObject()
+        protected virtual void CreateAClientObject()
         {
             GameObject clientObject = new GameObject("CLIENT_LobbyManager");
             NMLobbyManager _lobbyManager = clientObject.AddComponent<NMLobbyManager>();
             NMClientDiscovery _discovery = clientObject.AddComponent<NMClientDiscovery>();
+            AddEventsToClient(_lobbyManager);
             InitValueOfLobbyManager(_lobbyManager);
             _discovery.showGUI = false;
 
             IsDoneCreating = true;
         }
 
-        private protected void InitValueOfLobbyManager(NMLobbyManager lobbyManager)
+        protected virtual void InitValueOfLobbyManager(NMLobbyManager lobbyManager)
         {
             lobbyManager.showLobbyGUI = false;
             lobbyManager.networkPort = (desiredPort.Equals(0)) ? NMDefaultConstants.DEFAULT_PORT : desiredPort;
@@ -144,6 +133,85 @@ namespace NetworkMaker
             lobbyManager.autoCreatePlayer = false;
         }
         #endregion
+        #region CALLBACKS
+        protected void AddEventsToServer(NMLobbyManager lobbyManager)
+        {
+            //remove first to make sure no other listening is happening
+            RemoveEventsToServer(lobbyManager);
 
+            OnPressedStartServer += lobbyManager.InitiateServerStart;
+            OnPressedStopClient += lobbyManager.InitiateServerStop;
+        }
+        protected void RemoveEventsToServer(NMLobbyManager lobbyManager)
+        {
+            OnPressedStartServer -= lobbyManager.InitiateServerStart;
+            OnPressedStopServer -= lobbyManager.InitiateServerStop;
+        }
+        protected void AddEventsToClient(NMLobbyManager lobbyManager)
+        {
+            //remove first to make sure no other listening is happening
+            RemoveEventsToClient(lobbyManager);
+
+            OnPressedStartClient += lobbyManager.InitiateClientStart;
+            OnPressedStopClient += lobbyManager.InitiateClientStop;
+        }
+        protected void RemoveEventsToClient(NMLobbyManager lobbyManager)
+        {
+            OnPressedStartClient -= lobbyManager.InitiateClientStart;
+            OnPressedStopClient -= lobbyManager.InitiateClientStop;
+        }
+        #endregion
+        #region PUBLIC METHODS FOR SERVER
+        /// <summary>
+        /// Start broadcasting a message from the server
+        /// </summary>
+        public void StartBroadcastingServer()
+        {
+            if (GameObject.FindObjectOfType<NMServerDiscovery>() != null)
+                GameObject.FindObjectOfType<NMServerDiscovery>().OnClickStartBroadcast();
+            else
+                Debug.LogError("No NMServerDiscovery on this object: " + gameObject.name);
+        }
+        /// <summary>
+        /// Stop broadcasting a message from the server
+        /// </summary>
+        public void StopBroadcastingServer()
+        {
+            if (GameObject.FindObjectOfType<NMServerDiscovery>() != null)
+                GameObject.FindObjectOfType<NMServerDiscovery>().OnClickStopBroadcast();
+            else
+                Debug.LogError("No NMServerDiscovery on this object: " + gameObject.name);
+        }
+        /// <summary>
+        /// Initiate startup of Server
+        /// </summary>
+        public void InitiateStartServer()
+        {
+            OnPressedStartServer?.Invoke();
+        }
+        /// <summary>
+        /// Initiate stopping the server
+        /// </summary>
+        public void InitiateStopServer()
+        {
+            OnPressedStopServer?.Invoke();
+        }
+        /// <summary>
+        /// Initiate starting the client
+        /// </summary>
+        #endregion
+        #region PUBLIC METHODS FOR CLIENTS
+        public void InitiateStartClient()
+        {
+            OnPressedStartClient?.Invoke();
+        }
+        /// <summary>
+        /// Initiate stopping the client
+        /// </summary>
+        public void InitiateStopClient()
+        {
+            OnPressedStopClient?.Invoke();
+        }
+        #endregion
     }
 }
