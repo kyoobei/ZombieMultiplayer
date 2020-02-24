@@ -77,8 +77,8 @@ public class Player : CharacterBase
             (
                 Vector3.ClampMagnitude(forwardMovement + rightMovement, 1.0f) * moveSpeed
             );
-
-        transform.rotation = Quaternion.Slerp(transform.rotation, desiredRot, rotateSpeed * Time.deltaTime);
+        transform.Rotate(0, horValue * rotateSpeed, 0);
+        //transform.rotation = Quaternion.Slerp(transform.rotation, desiredRot, rotateSpeed * Time.deltaTime);
 #endif
     }
     protected override void Move(Vector3 direction)
@@ -116,10 +116,15 @@ public class Player : CharacterBase
                 }
                 break;
             case PlayerState.IsMonster:
+                transform.tag = "Zombie";
                 LoadMonsterModel();
                 UpdatePlayerInputs();
                 break;
         }
+    }
+    public void InitiateBeingEaten()
+    {
+        playerState = PlayerState.IsBeingTurned;
     }
     bool IsDoneBeingTurned()
     {
