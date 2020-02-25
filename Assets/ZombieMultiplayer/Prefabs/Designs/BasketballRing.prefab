@@ -322,6 +322,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5796866426840998590}
+  - component: {fileID: 1876168809}
   m_Layer: 0
   m_Name: BasketballRing
   m_TagString: Untagged
@@ -338,7 +339,7 @@ Transform:
   m_GameObject: {fileID: 5796866426840998591}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 4.68}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_Children:
   - {fileID: 5796866426447186301}
   - {fileID: 5796866425596823024}
@@ -346,3 +347,16 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &1876168809
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5796866426840998591}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 3.0384839, y: 5.71409, z: 2.4161203}
+  m_Center: {x: -0.25098357, y: 2.357045, z: 0.31855044}

@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8948628313399378945}
   - component: {fileID: 8948628313399378948}
   - component: {fileID: 8948628313399378947}
+  - component: {fileID: 973121841}
   m_Layer: 0
   m_Name: platform
   m_TagString: Untagged
@@ -26,8 +27,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8948628313399378944}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.026, y: 0.28, z: -1.133}
-  m_LocalScale: {x: 7.3083887, y: 0.5, z: 2.4274986}
+  m_LocalPosition: {x: -0.026, y: 0.18, z: -1.133}
+  m_LocalScale: {x: 7.3083887, y: 0.3, z: 2.4274986}
   m_Children: []
   m_Father: {fileID: 8948628313893880062}
   m_RootOrder: 2
@@ -78,6 +79,19 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!65 &973121841
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8948628313399378944}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.0000005, y: 1, z: 1.0000002}
+  m_Center: {x: -0.00000023841858, y: 0, z: 0}
 --- !u!1 &8948628313691214239
 GameObject:
   m_ObjectHideFlags: 0
@@ -259,7 +273,7 @@ Transform:
   m_GameObject: {fileID: 8948628313893880061}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -8.29, y: 0, z: 1.01}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.9683759, y: 1, z: 1}
   m_Children:
   - {fileID: 8948628314894143306}
   - {fileID: 8948628314244598542}
@@ -369,8 +383,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8948628314244598541}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 3, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: 5.109, z: 0}
+  m_LocalScale: {x: 1, y: 1.2884896, z: 1}
   m_Children:
   - {fileID: 8948628314753735795}
   - {fileID: 8948628313913086293}
@@ -483,8 +497,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8948628314894143318}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 3, z: 0}
-  m_LocalScale: {x: 7, y: 3, z: 0.1}
+  m_LocalPosition: {x: 0, y: 5.109, z: 0}
+  m_LocalScale: {x: 7, y: 3.8654687, z: 0.1}
   m_Children: []
   m_Father: {fileID: 8948628313893880062}
   m_RootOrder: 0
