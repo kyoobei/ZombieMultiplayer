@@ -1,12 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.AI;
 public class Zombie : MonoBehaviour
 {
     [SerializeField] ZombieDetection zombieDetection;
     [SerializeField] ZombieEater zombieEater;
     [SerializeField] GameObject target;
+
+    NavMeshAgent zombieAgent;
 
     [Range(0f, 1f)] public float positionStrength = 1f;
     [Range(0f, 1f)] public float rotationStrength = 1f;
@@ -33,6 +35,7 @@ public class Zombie : MonoBehaviour
     private void Start()
     {
         zombieRigidbody = GetComponent<Rigidbody>();
+        zombieAgent = GetComponent<NavMeshAgent>();
         //characterController = GetComponent<CharacterController>();
     }
     private void Update()
@@ -105,8 +108,9 @@ public class Zombie : MonoBehaviour
             characterController.SimpleMove(movement);
             */
             //Vector3 direction = target.transform.position - transform.position;
-            transform.position = Vector3.MoveTowards(transform.position, target.transform.position, moveSpeed * Time.deltaTime);
-          //  zombieRigidbody.AddForce(Vector3.forward);
+            //transform.position = Vector3.MoveTowards(transform.position, target.transform.position, moveSpeed * Time.deltaTime);
+            zombieAgent.SetDestination(target.transform.position);  
+        //  zombieRigidbody.AddForce(Vector3.forward);
         }
     }
     private void UpdateEating()

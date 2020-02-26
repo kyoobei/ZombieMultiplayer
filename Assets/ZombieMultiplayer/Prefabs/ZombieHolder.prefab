@@ -102,7 +102,7 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 6
+  m_Radius: 10
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &1579160235
 MonoBehaviour:
@@ -130,6 +130,7 @@ GameObject:
   - component: {fileID: 1713461449}
   - component: {fileID: 1713461451}
   - component: {fileID: 1713461452}
+  - component: {fileID: 1714999096}
   m_Layer: 0
   m_Name: ZombieHolder
   m_TagString: Untagged
@@ -179,7 +180,7 @@ CapsuleCollider:
   m_GameObject: {fileID: 7142178697879948998}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   m_Radius: 0.52
   m_Height: 5.7183514
   m_Direction: 1
@@ -205,6 +206,28 @@ MonoBehaviour:
   multiplierSpeed: 2
   zombieState: 0
   zombieType: 0
+--- !u!195 &1714999096
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7142178697879948998}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.5
+  m_Speed: 10
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 2
+  m_BaseOffset: 0
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 2
 --- !u!1001 &7142178697794820854
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -275,20 +298,19 @@ PrefabInstance:
     - target: {fileID: 3305920991726709325, guid: d58be77cba3adf54cb14b15052b86514,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 3
+      value: 2.4
       objectReference: {fileID: 0}
     - target: {fileID: 3305920991726709325, guid: d58be77cba3adf54cb14b15052b86514,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 3
+      value: 2.4
       objectReference: {fileID: 0}
     - target: {fileID: 3305920991726709325, guid: d58be77cba3adf54cb14b15052b86514,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 3
+      value: 2.4
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 7537417665459280382, guid: d58be77cba3adf54cb14b15052b86514, type: 3}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d58be77cba3adf54cb14b15052b86514, type: 3}
 --- !u!4 &5692233334391615675 stripped
 Transform:

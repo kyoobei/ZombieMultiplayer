@@ -35,7 +35,7 @@ public class ZombieDetection : MonoBehaviour
     }
     public void OnTriggerExit(Collider other)
     {
-        target = null;
-        hasDetectedAPlayer = false;
+        ///target = null;
+        //hasDetectedAPlayer = false;
     }
 }
