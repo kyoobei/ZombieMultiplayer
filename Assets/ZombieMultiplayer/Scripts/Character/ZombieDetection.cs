@@ -12,7 +12,6 @@ public class ZombieDetection : MonoBehaviour
         {
             hasDetectedAPlayer = true;
             target = other.gameObject;
-            Debug.Log("Has detected a player");
         }
     }
     public void OnTriggerStay(Collider other)
@@ -25,7 +24,6 @@ public class ZombieDetection : MonoBehaviour
                 target = other.gameObject;
                 hasDetectedAPlayer = true;
             }
-            Debug.Log("Has detected a player");
         }
         else
         {
@@ -35,6 +33,11 @@ public class ZombieDetection : MonoBehaviour
     }
     public void OnTriggerExit(Collider other)
     {
+        if(!other.tag.Equals("Player"))
+        {
+            target = null;
+            hasDetectedAPlayer = false;
+        }
         ///target = null;
         //hasDetectedAPlayer = false;
     }

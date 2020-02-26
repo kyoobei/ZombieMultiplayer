@@ -128,7 +128,6 @@ GameObject:
   m_Component:
   - component: {fileID: 7142178697879948993}
   - component: {fileID: 1713461449}
-  - component: {fileID: 1713461451}
   - component: {fileID: 1713461452}
   - component: {fileID: 1714999096}
   m_Layer: 0
@@ -171,20 +170,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 80
   m_CollisionDetection: 0
---- !u!136 &1713461451
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7142178697879948998}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 0
-  m_Radius: 0.52
-  m_Height: 5.7183514
-  m_Direction: 1
-  m_Center: {x: 0, y: 2.6991758, z: 0}
 --- !u!114 &1713461452
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -200,8 +185,7 @@ MonoBehaviour:
   zombieDetection: {fileID: 1579160235}
   zombieEater: {fileID: 29707357}
   target: {fileID: 0}
-  positionStrength: 0.086
-  rotationStrength: 0.064
+  zombieAnimator: {fileID: 829881422555136776}
   moveSpeed: 4
   multiplierSpeed: 2
   zombieState: 0
@@ -310,11 +294,22 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 2.4
       objectReference: {fileID: 0}
+    - target: {fileID: 7537417665459280382, guid: d58be77cba3adf54cb14b15052b86514,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: cece14eab9d4f60459ca7f8d7f94bb4b, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d58be77cba3adf54cb14b15052b86514, type: 3}
 --- !u!4 &5692233334391615675 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3305920991726709325, guid: d58be77cba3adf54cb14b15052b86514,
+    type: 3}
+  m_PrefabInstance: {fileID: 7142178697794820854}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &829881422555136776 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 7537417665459280382, guid: d58be77cba3adf54cb14b15052b86514,
     type: 3}
   m_PrefabInstance: {fileID: 7142178697794820854}
   m_PrefabAsset: {fileID: 0}

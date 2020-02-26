@@ -5,6 +5,9 @@ using UnityEngine.Networking;
 public class Player : CharacterBase
 {
     [SerializeField] float transformerTimer;
+    [SerializeField] GameObject humanLight;
+    [SerializeField] GameObject monsterLight;
+   
     float currentTransformerTimer;
     NetworkIdentity playerIdentity;
     //Rigidbody playerRigidbody;
@@ -29,6 +32,7 @@ public class Player : CharacterBase
         //playerRigidbody = GetComponent<Rigidbody>();
         playerState = PlayerState.IsHuman;
 
+        LoadHumanModel();
         //if (!playerIdentity.localPlayerAuthority)
         //{
             mainCamFollow.target = this.transform;
@@ -73,6 +77,13 @@ public class Player : CharacterBase
         Vector3 rotational = new Vector3(horValue, 0f, 0f);
         Quaternion desiredRot = Quaternion.LookRotation(rotational);
 
+        if (animatorToUse != null) 
+        {
+            if (Mathf.Abs(verValue) > 0.1f || Mathf.Abs(horValue) > 0.1f)
+                animatorToUse.SetFloat("movement", 0.2f);
+            else
+                animatorToUse.SetFloat("movement", 0f);
+        }
         characterController.SimpleMove
             (
                 Vector3.ClampMagnitude(forwardMovement + rightMovement, 1.0f) * moveSpeed
@@ -108,6 +119,7 @@ public class Player : CharacterBase
                 if (!startTransformTimer)
                 {
                     StartCoroutine(TimerForBeingTurned());
+                    animatorToUse.SetTrigger("isAttacked");
                     startTransformTimer = true;
                 }
                 if(IsDoneBeingTurned())
@@ -150,6 +162,24 @@ public class Player : CharacterBase
         //movement = Vector3.zero;
         //stop coroutine from perfoming if it is runing
         StopCoroutine(TimerForBeingTurned());
+    }
+    protected override void LoadHumanModel()
+    {
+        base.LoadHumanModel();
+        monsterLight.SetActive(false);
+        humanLight.SetActive(true);
+    }
+    protected override void LoadMonsterModel()
+    {
+        base.LoadMonsterModel();
+        monsterLight.SetActive(true);
+        humanLight.SetActive(false);
+    }
+    protected override void DeactivateAllModels()
+    {
+        base.DeactivateAllModels();
+        monsterLight.SetActive(false);
+        humanLight.SetActive(false);
     }
 
 }

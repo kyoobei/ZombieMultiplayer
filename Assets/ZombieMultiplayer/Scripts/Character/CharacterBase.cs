@@ -20,6 +20,10 @@ public class CharacterBase : MonoBehaviour
     /// model to be use if the character is in monster form
     /// </summary>
     [SerializeField] GameObject monsterModel;
+    [SerializeField] Animator humanAnim;
+    [SerializeField] Animator monsterAnim;
+
+    [SerializeField] protected Animator animatorToUse;
 
     protected enum CharacterType
     {
@@ -40,13 +44,19 @@ public class CharacterBase : MonoBehaviour
     {
         monsterModel.SetActive(false);
         if (!humanModel.activeInHierarchy)
+        {
             humanModel.SetActive(true);
+            animatorToUse = humanAnim;
+        }
     }
     protected virtual void LoadMonsterModel()
     {
         humanModel.SetActive(false);
         if (!monsterModel.activeInHierarchy)
+        {
             monsterModel.SetActive(true);
+            animatorToUse = monsterAnim;
+        }
     }
     protected virtual void DeactivateAllModels()
     {

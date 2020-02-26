@@ -7,14 +7,14 @@ public class Zombie : MonoBehaviour
     [SerializeField] ZombieDetection zombieDetection;
     [SerializeField] ZombieEater zombieEater;
     [SerializeField] GameObject target;
-
+    [SerializeField] Animator zombieAnimator;
     NavMeshAgent zombieAgent;
-
-    [Range(0f, 1f)] public float positionStrength = 1f;
-    [Range(0f, 1f)] public float rotationStrength = 1f;
 
     public float moveSpeed;
     public float multiplierSpeed;
+
+    private Vector3 initialPosSummoned;
+    bool getInitialPos;
     public enum ZombieType
     {
         STATIONARY,
@@ -37,6 +37,7 @@ public class Zombie : MonoBehaviour
         zombieRigidbody = GetComponent<Rigidbody>();
         zombieAgent = GetComponent<NavMeshAgent>();
         //characterController = GetComponent<CharacterController>();
+        
     }
     private void Update()
     {
@@ -47,6 +48,7 @@ public class Zombie : MonoBehaviour
         switch(zombieState)
         {
             case ZombieState.IDLE:
+                
                 if(zombieDetection.hasDetectedAPlayer)
                 {
                     zombieState = ZombieState.CHASING;
@@ -81,7 +83,21 @@ public class Zombie : MonoBehaviour
     }
     void MovePersonally()
     {
-
+        if(!getInitialPos)
+        {
+            initialPosSummoned = transform.position;
+            getInitialPos = true;
+        }
+        float distance = Vector3.Distance(initialPosSummoned, transform.position);
+        if(distance <= 0.3f)
+        {
+            zombieAnimator.SetFloat("movement", 0f);
+        }
+        else
+        {
+            zombieAgent.SetDestination(initialPosSummoned);
+            zombieAnimator.SetFloat("movement", 0.2f);
+        }
     }
     void MoveTowardsPlayer()
     {
@@ -109,8 +125,8 @@ public class Zombie : MonoBehaviour
             */
             //Vector3 direction = target.transform.position - transform.position;
             //transform.position = Vector3.MoveTowards(transform.position, target.transform.position, moveSpeed * Time.deltaTime);
-            zombieAgent.SetDestination(target.transform.position);  
-        //  zombieRigidbody.AddForce(Vector3.forward);
+            zombieAgent.SetDestination(target.transform.position);
+            zombieAnimator.SetFloat("movement", 0.2f);
         }
     }
     private void UpdateEating()
@@ -119,6 +135,7 @@ public class Zombie : MonoBehaviour
         {
             if (target != null)
             {
+                zombieAnimator.SetBool("isAttacking", true);
                 Player playerDetected = target.GetComponent<Player>();
                 playerDetected.InitiateBeingEaten();
                 isEating = true;
@@ -126,6 +143,7 @@ public class Zombie : MonoBehaviour
         }
         if(zombieEater.targetEaten == null)
         {
+            zombieAnimator.SetBool("isAttacking", false);
             isEating = false;
             zombieState = ZombieState.IDLE;
         }
