@@ -14,16 +14,16 @@ ScriptsOnlyBuild:
     UnityEditor.Graphs.dll:
     - UnityEditor.Graphs.AnimationBlendTree.Graph
     - UnityEditor.Graphs.AnimationBlendTree.GraphGUI
-    - UnityEditor.Graphs.AnimationStateMachine.AnyStateNode
     - UnityEditor.Graphs.AnimationStateMachine.Graph
     - UnityEditor.Graphs.AnimationStateMachine.GraphGUI
-    - UnityEditor.Graphs.AnimationStateMachine.StateNode
     - UnityEditor.Graphs.AnimatorControllerTool
     UnityEditor.TestRunner.dll:
     - UnityEditor.TestTools.TestRunner.Api.CallbacksHolder
     - UnityEditor.TestTools.TestRunner.TestListCacheData
     com.unity.multiplayer-hlapi.Runtime.dll:
     - UnityEngine.Networking.NetworkCallbacks
+    - UnityEngine.Networking.NetworkIdentity
+    - UnityEngine.Networking.NetworkLobbyPlayer
   sceneClasses:
     Assets/ZombieMultiplayer/Scenes/scene_player_mainGame.unity:
     - Class: 1
@@ -756,4 +756,4 @@ ScriptsOnlyBuild:
   platform: 19
   scenePathNames:
   - Assets/ZombieMultiplayer/Scenes/scene_player_mainGame.unity
-  playerPath: C:/Users/AGMartinez/Desktop/UnityBuilds/Tester/PC/ZombieProposal/ZombieMultiplayer.exe
+  playerPath: C:/Users/AGMartinez/Desktop/UnityBuilds/Tester/ZombieNet/ZombieMultiplayer.exe

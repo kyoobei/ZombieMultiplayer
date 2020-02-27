@@ -26,7 +26,9 @@ public class Player : CharacterBase
     bool startTransformTimer;
     private void Start()
     {
-        playerIdentity = GetComponent<NetworkIdentity>();
+        if(GetComponent<NetworkIdentity>() != null)
+            playerIdentity = GetComponent<NetworkIdentity>();
+        
         characterController = GetComponent<CharacterController>();
         mainCamFollow = Camera.main.GetComponent<CameraFollow>();
         //playerRigidbody = GetComponent<Rigidbody>();
@@ -42,8 +44,11 @@ public class Player : CharacterBase
     private void Update()
     {
         //if the obeject is not for the specific client or server
-       // if (!playerIdentity.localPlayerAuthority)
-      //      return;
+        if (playerIdentity != null)
+        {
+            if (!playerIdentity.localPlayerAuthority)
+                return;
+        }
 
         UpdatePlayerState(); 
     }
