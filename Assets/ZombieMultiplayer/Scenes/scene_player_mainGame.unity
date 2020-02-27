@@ -10624,7 +10624,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   zombiePrefab: {fileID: 7142178697879948998, guid: ad255c7e01a80a742bed2832beca7421,
     type: 3}
-  numberOfZombieCopy: 30
+  numberOfZombieCopy: 10
 --- !u!1001 &1684941125
 PrefabInstance:
   m_ObjectHideFlags: 0
