@@ -44,24 +44,26 @@ public class Player : CharacterBase
     private void Update()
     {
         //if the obeject is not for the specific client or server
+        /*
         if (playerIdentity != null)
         {
-            if (!playerIdentity.localPlayerAuthority)
+            if (!playerIdentity.localPlayerAuthority && !playerIdentity.isLocalPlayer)
                 return;
-        }
 
-        UpdatePlayerState(); 
-    }
-    private void FixedUpdate()
-    {
-        /*
-        if(playerState.Equals(PlayerState.IsHuman) 
-            || playerState.Equals(PlayerState.IsMonster))
+            UpdatePlayerState();
+        }
+        else
         {
-            Move(movement); 
+            //we are only playing single player
+            UpdatePlayerState();
         }
         */
+        if(isLocalPlayer)
+        {
+            UpdatePlayerState();
+        }
     }
+
     private void UpdatePlayerInputs()
     {
         //WASD
@@ -96,15 +98,6 @@ public class Player : CharacterBase
         transform.Rotate(0, horValue * rotateSpeed, 0);
         //transform.rotation = Quaternion.Slerp(transform.rotation, desiredRot, rotateSpeed * Time.deltaTime);
 #endif
-    }
-    protected override void Move(Vector3 direction)
-    {
-        /*
-        playerRigidbody.MovePosition
-            (
-                transform.position + (direction * moveSpeed * Time.fixedDeltaTime)
-            );
-            */
     }
     private void UpdatePlayerState()
     {

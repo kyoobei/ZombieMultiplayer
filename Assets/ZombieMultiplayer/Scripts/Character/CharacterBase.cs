@@ -1,8 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public class CharacterBase : MonoBehaviour
+using UnityEngine.Networking;
+public class CharacterBase : NetworkBehaviour
 {
     /// <summary>
     /// deals with move speed of whatever the character is
@@ -20,8 +20,6 @@ public class CharacterBase : MonoBehaviour
     /// model to be use if the character is in monster form
     /// </summary>
     [SerializeField] GameObject monsterModel;
-    [SerializeField] Animator humanAnim;
-    [SerializeField] Animator monsterAnim;
 
     [SerializeField] protected Animator animatorToUse;
 
@@ -30,15 +28,39 @@ public class CharacterBase : MonoBehaviour
         HUMAN,
         MONSTER
     };
-    protected CharacterType charType;
+    protected enum CharacterState
+    {
+        IDLE,
+        MOVING,
+        SPECIALACTION
+    };
 
-    protected virtual void Move()
+    protected CharacterType charType;
+    protected CharacterState characterState;
+
+    protected virtual void UpdateClientCharacterState()
     {
-        //deals with movement
-    } 
-    protected virtual void Move(Vector3 direction)
+        switch(characterState)
+        {
+            case CharacterState.IDLE:
+                break;
+            case CharacterState.MOVING:
+                break;
+            case CharacterState.SPECIALACTION:
+                break;
+        }
+    }
+    protected virtual void IdleState()
     {
-        //deals with movement
+
+    }
+    protected virtual void MovingState()
+    {
+
+    }
+    protected virtual void SpecialAction()
+    {
+
     }
     protected virtual void LoadHumanModel()
     {
@@ -46,7 +68,7 @@ public class CharacterBase : MonoBehaviour
         if (!humanModel.activeInHierarchy)
         {
             humanModel.SetActive(true);
-            animatorToUse = humanAnim;
+            animatorToUse = humanModel.GetComponent<Animator>();
         }
     }
     protected virtual void LoadMonsterModel()
@@ -55,13 +77,14 @@ public class CharacterBase : MonoBehaviour
         if (!monsterModel.activeInHierarchy)
         {
             monsterModel.SetActive(true);
-            animatorToUse = monsterAnim;
+            animatorToUse = monsterModel.GetComponent<Animator>();
         }
     }
     protected virtual void DeactivateAllModels()
     {
         humanModel.SetActive(false);
         monsterModel.SetActive(false);
+        animatorToUse = null;
     }
     protected virtual void ResetValues()
     {

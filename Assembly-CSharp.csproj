@@ -83,6 +83,7 @@
     <Compile Include="Assets\ZombieMultiplayer\Scripts\Character\Zombie.cs" />
     <Compile Include="Assets\ZombieMultiplayer\Scripts\Character\ZombieDetection.cs" />
     <Compile Include="Assets\ZombieMultiplayer\Scripts\Character\ZombieEater.cs" />
+    <Compile Include="Assets\ZombieMultiplayer\Scripts\GameController.cs" />
     <Compile Include="Assets\ZombieMultiplayer\Scripts\NetworkMaker\NMClientDiscovery.cs" />
     <Compile Include="Assets\ZombieMultiplayer\Scripts\NetworkMaker\NMDefaultConstants.cs" />
     <Compile Include="Assets\ZombieMultiplayer\Scripts\NetworkMaker\NMLanInfoConnection.cs" />
