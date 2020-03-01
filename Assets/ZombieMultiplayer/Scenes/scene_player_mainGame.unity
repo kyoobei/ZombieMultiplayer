@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 0.6
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.3504168, g: 0.390697, b: 0.45406973, a: 0.6}
+  m_IndirectSpecularColor: {r: 0.35041693, g: 0.3906967, b: 0.45406985, a: 0.6}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2907,7 +2907,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &632814255
 Transform:
   m_ObjectHideFlags: 0
@@ -6800,7 +6800,7 @@ PrefabInstance:
     - target: {fileID: 5512538022255702320, guid: 9385bb440b5c5b7428988517c338744c,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5512538022255702321, guid: 9385bb440b5c5b7428988517c338744c,
         type: 3}
@@ -6857,8 +6857,57 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5512538022255702322, guid: 9385bb440b5c5b7428988517c338744c,
+        type: 3}
+      propertyPath: humanModel
+      value: 
+      objectReference: {fileID: 1274407410}
+    - target: {fileID: 5512538022255702322, guid: 9385bb440b5c5b7428988517c338744c,
+        type: 3}
+      propertyPath: humanLight
+      value: 
+      objectReference: {fileID: 1274407409}
+    - target: {fileID: 5512538022255702322, guid: 9385bb440b5c5b7428988517c338744c,
+        type: 3}
+      propertyPath: monsterModel
+      value: 
+      objectReference: {fileID: 1274407408}
+    - target: {fileID: 5512538022255702322, guid: 9385bb440b5c5b7428988517c338744c,
+        type: 3}
+      propertyPath: monsterLight
+      value: 
+      objectReference: {fileID: 1274407407}
+    - target: {fileID: 5512538022255702322, guid: 9385bb440b5c5b7428988517c338744c,
+        type: 3}
+      propertyPath: rotateSpeed
+      value: 4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9385bb440b5c5b7428988517c338744c, type: 3}
+--- !u!1 &1274407407 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5512538021877721810, guid: 9385bb440b5c5b7428988517c338744c,
+    type: 3}
+  m_PrefabInstance: {fileID: 1274407406}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1274407408 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6285860040827101715, guid: 9385bb440b5c5b7428988517c338744c,
+    type: 3}
+  m_PrefabInstance: {fileID: 1274407406}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1274407409 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5512538022169872655, guid: 9385bb440b5c5b7428988517c338744c,
+    type: 3}
+  m_PrefabInstance: {fileID: 1274407406}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1274407410 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5512538021809287583, guid: 9385bb440b5c5b7428988517c338744c,
+    type: 3}
+  m_PrefabInstance: {fileID: 1274407406}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1275906726
 PrefabInstance:
   m_ObjectHideFlags: 0

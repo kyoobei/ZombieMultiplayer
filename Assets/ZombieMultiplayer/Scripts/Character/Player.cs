@@ -4,6 +4,126 @@ using UnityEngine;
 using UnityEngine.Networking;
 public class Player : CharacterBase
 {
+    CharacterController m_charController;
+    Animator m_animatorToUse;
+    enum PlayerStateEnum
+    {
+        None,
+        IsHuman,
+        IsBeingTurned,
+        IsMonster
+    };
+    [Header("Checkers")]
+    [SerializeField] PlayerStateEnum pState;
+    [Header("Human")]
+    [SerializeField] GameObject humanModel;
+    [SerializeField] GameObject humanLight;
+    [Header("Monster")]
+    [SerializeField] GameObject monsterModel;
+    [SerializeField] GameObject monsterLight;
+
+    float verticalVal;
+    float horizontalVal;
+    private void Awake()
+    {
+        m_charController = GetComponent<CharacterController>();
+    }
+    private void Start()
+    {
+        pState = PlayerStateEnum.IsHuman;
+        LoadHumanSettings();
+    }
+    private void Update()
+    {
+        UpdatePlayerInputs();
+        UpdateCharacterState();
+    }
+    private void UpdatePlayerInputs()
+    {
+        horizontalVal = Input.GetAxis("Horizontal");
+        verticalVal = Input.GetAxis("Vertical");
+
+        Vector3 forwardMovement = transform.forward * verticalVal;
+        Vector3 sidewardMovement = transform.right * horizontalVal;
+
+        m_charController.SimpleMove
+            (
+               Vector3.ClampMagnitude(
+                   forwardMovement + sidewardMovement,
+                   1.0f
+               ) * moveSpeed
+            );
+
+        //for rotation
+        transform.Rotate(0, horizontalVal * rotateSpeed, 0);
+    }
+    private void LoadHumanSettings()
+    {
+        if (monsterModel.activeInHierarchy)
+        {
+            monsterModel.SetActive(false);
+            monsterLight.SetActive(false);
+        }
+        if(!humanModel.activeInHierarchy)
+        {
+            humanLight.SetActive(true);
+            humanModel.SetActive(true);
+            m_animatorToUse = humanModel.GetComponent<Animator>(); 
+        }
+    }
+    private void LoadMonsterSettings()
+    {
+        if (humanModel.activeInHierarchy)
+        {
+            humanModel.SetActive(false);
+            humanLight.SetActive(false);
+        }
+        if(!monsterModel.activeInHierarchy)
+        {
+            monsterLight.SetActive(true); 
+            monsterModel.SetActive(true);
+            m_animatorToUse = monsterModel.GetComponent<Animator>();
+        }
+    }
+    #region OVVERIDES
+    protected override void IdleState()
+    {
+        base.IdleState();
+        float resultVal = Mathf.Abs(horizontalVal + verticalVal);
+        resultVal = Mathf.Clamp01(resultVal);
+        if (resultVal > 0.2f)
+        {
+            characterState = CharacterState.MOVING;
+        }
+    }
+    protected override void MovingState()
+    {
+        base.MovingState();
+        float resultVal = Mathf.Abs(horizontalVal + verticalVal);
+        resultVal = Mathf.Clamp01(resultVal);
+        
+        if (resultVal <= 0.2f)
+        {
+            characterState = CharacterState.IDLE;
+        }
+    }
+    protected override void SpecialAction()
+    {
+        base.SpecialAction();
+    }
+    #endregion
+    //in case a reset is needed
+    public void ResetEverything()
+    {
+        humanModel.SetActive(false);
+        monsterModel.SetActive(false);
+        humanLight.SetActive(false);
+        monsterLight.SetActive(false);
+        m_animatorToUse = null;
+        pState = PlayerStateEnum.None;
+    }
+   /*
+    * 
     [SerializeField] float transformerTimer;
     [SerializeField] GameObject humanLight;
     [SerializeField] GameObject monsterLight;
@@ -43,39 +163,21 @@ public class Player : CharacterBase
     }
     private void Update()
     {
-        //if the obeject is not for the specific client or server
-        /*
-        if (playerIdentity != null)
-        {
-            if (!playerIdentity.localPlayerAuthority && !playerIdentity.isLocalPlayer)
-                return;
-
-            UpdatePlayerState();
-        }
-        else
-        {
-            //we are only playing single player
-            UpdatePlayerState();
-        }
-        */
-        if(isLocalPlayer)
-        {
-            UpdatePlayerState();
-        }
+        UpdatePlayerState();
     }
 
     private void UpdatePlayerInputs()
     {
         //WASD
 #if UNITY_EDITOR || UNITY_STANDALONE_WIN
-        /*
-        movement = new Vector3
-            (
-                Input.GetAxis("Horizontal"),
-                0,
-                Input.GetAxis("Vertical")
-            );
-            */
+        
+        //movement = new Vector3
+        //    (
+        //        Input.GetAxis("Horizontal"),
+        //        0,
+        //        Input.GetAxis("Vertical")
+        //    );
+            
         float horValue = Input.GetAxis("Horizontal");
         float verValue = Input.GetAxis("Vertical");
 
@@ -179,5 +281,5 @@ public class Player : CharacterBase
         monsterLight.SetActive(false);
         humanLight.SetActive(false);
     }
-
+    */
 }

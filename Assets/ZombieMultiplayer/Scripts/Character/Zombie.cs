@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-public class Zombie : MonoBehaviour
+public class Zombie : CharacterBase
 {
+    /*
     [SerializeField] ZombieDetection zombieDetection;
     [SerializeField] ZombieEater zombieEater;
     [SerializeField] GameObject target;
@@ -110,21 +111,7 @@ public class Zombie : MonoBehaviour
                     transform.position.y,
                     target.transform.position.z
                 ));
-            /*
-            Vector3 direction = (target.transform.position - transform.position);
-            float magnitude = direction.magnitude;
-            direction.Normalize();
-
-            Vector3 velocity = direction * moveSpeed;
-            zombieRigidbody.velocity = new Vector3(velocity.x, zombieRigidbody.velocity.y, velocity.z);
-            */
-            /*
-            Vector3 direction = target.transform.position - transform.position;
-            Vector3 movement = direction.normalized * moveSpeed * Time.deltaTime;
-            characterController.SimpleMove(movement);
-            */
-            //Vector3 direction = target.transform.position - transform.position;
-            //transform.position = Vector3.MoveTowards(transform.position, target.transform.position, moveSpeed * Time.deltaTime);
+           
             zombieAgent.SetDestination(target.transform.position);
             zombieAnimator.SetFloat("movement", 0.2f);
         }
@@ -136,8 +123,8 @@ public class Zombie : MonoBehaviour
             if (target != null)
             {
                 zombieAnimator.SetBool("isAttacking", true);
-                Player playerDetected = target.GetComponent<Player>();
-                playerDetected.InitiateBeingEaten();
+                //Player playerDetected = target.GetComponent<Player>();
+                //playerDetected.InitiateBeingEaten();
                 isEating = true;
             }
         }
@@ -158,4 +145,5 @@ public class Zombie : MonoBehaviour
                 break;
         }
     }
+    */
 }
