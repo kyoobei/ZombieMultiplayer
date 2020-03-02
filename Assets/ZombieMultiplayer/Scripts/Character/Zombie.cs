@@ -4,6 +4,87 @@ using UnityEngine;
 using UnityEngine.AI;
 public class Zombie : CharacterBase
 {
+    NavMeshAgent zombieAgent;
+    GameObject targetObject;
+    ZombieDetection zombieDetection;
+    ZombieEater zombieEater;
+    enum ZombieAIBehaviour
+    {
+        STATIONARY,
+        PATROLLING
+    };
+    [SerializeField] private ZombieAIBehaviour initialZombieBehavior;
+    [SerializeField] private ZombieAIBehaviour currentZombieBehavior;
+    [SerializeField] private float patrolDistance;
+    [SerializeField] private bool isEating;
+
+    Vector3 initialPosition;
+    bool hasGotInitialPosition;
+    private void Awake()
+    {
+        zombieAgent = GetComponent<NavMeshAgent>();
+    }
+    private void Start()
+    {
+        zombieDetection = GetComponentInChildren<ZombieDetection>();
+        zombieEater = GetComponentInChildren<ZombieEater>();
+
+        zombieAgent.speed = moveSpeed;
+        zombieAgent.angularSpeed = rotateSpeed;
+
+        currentZombieBehavior = GetRandomBehaviour();
+        initialZombieBehavior = currentZombieBehavior;
+    }
+    private void Update()
+    {
+        if (!hasGotInitialPosition)
+        {
+            if(zombieAgent.isOnNavMesh)
+            {
+                initialPosition = transform.position;
+                hasGotInitialPosition = true;
+            }
+        }
+        else
+        {
+            UpdateCharacterState();
+        }
+    }
+    #region OVERRIDES
+    protected override void IdleState()
+    {
+        base.IdleState();
+        switch(currentZombieBehavior)
+        {
+            case ZombieAIBehaviour.STATIONARY:
+                //add code here to change from stationary to 
+                //patrolling
+                break;
+            case ZombieAIBehaviour.PATROLLING:
+                characterState = CharacterState.MOVING;
+                break;
+        }
+    }
+    protected override void MovingState()
+    {
+     
+    }
+    protected override void SpecialAction()
+    {
+        base.SpecialAction();
+        //for eating sequence;
+        //if done with the special action go back to the initial
+        //AI type
+    }
+    #endregion
+    private ZombieAIBehaviour GetRandomBehaviour()
+    {
+        int randomVal = Random.Range(1, 15);
+        if (randomVal % 2 == 0)
+            return ZombieAIBehaviour.STATIONARY;
+        else
+            return ZombieAIBehaviour.PATROLLING;
+    }
     /*
     [SerializeField] ZombieDetection zombieDetection;
     [SerializeField] ZombieEater zombieEater;

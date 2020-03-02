@@ -182,14 +182,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 317b09dbb2832d34191e62dd55f954f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  zombieDetection: {fileID: 1579160235}
-  zombieEater: {fileID: 29707357}
-  target: {fileID: 0}
-  zombieAnimator: {fileID: 829881422555136776}
-  moveSpeed: 4
-  multiplierSpeed: 2
-  zombieState: 0
-  zombieType: 0
+  moveSpeed: 10
+  rotateSpeed: 120
+  characterState: 0
 --- !u!195 &1714999096
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -304,12 +299,6 @@ PrefabInstance:
 --- !u!4 &5692233334391615675 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3305920991726709325, guid: d58be77cba3adf54cb14b15052b86514,
-    type: 3}
-  m_PrefabInstance: {fileID: 7142178697794820854}
-  m_PrefabAsset: {fileID: 0}
---- !u!95 &829881422555136776 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 7537417665459280382, guid: d58be77cba3adf54cb14b15052b86514,
     type: 3}
   m_PrefabInstance: {fileID: 7142178697794820854}
   m_PrefabAsset: {fileID: 0}
