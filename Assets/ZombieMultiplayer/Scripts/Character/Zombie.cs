@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.AI;
 public class Zombie : CharacterBase
 {
+    public List<GameObject> listOfPatrolPoints = new List<GameObject>();
+    [SerializeField] List<int> patrolledIndexesList = new List<int>();
     NavMeshAgent zombieAgent;
     GameObject targetObject;
     ZombieDetection zombieDetection;
@@ -11,15 +13,17 @@ public class Zombie : CharacterBase
     enum ZombieAIBehaviour
     {
         STATIONARY,
-        PATROLLING
+        PATROLLING,
+        DETECTED
     };
     [SerializeField] private ZombieAIBehaviour initialZombieBehavior;
     [SerializeField] private ZombieAIBehaviour currentZombieBehavior;
-    [SerializeField] private float patrolDistance;
     [SerializeField] private bool isEating;
-
-    Vector3 initialPosition;
-    bool hasGotInitialPosition;
+    [SerializeField] private float maxWaitTime;
+    
+    float m_currentWaitTime;
+    Vector3 m_targetPatrolPosition;
+    bool m_isPatrolPosAcquired;
     private void Awake()
     {
         zombieAgent = GetComponent<NavMeshAgent>();
@@ -31,21 +35,16 @@ public class Zombie : CharacterBase
 
         zombieAgent.speed = moveSpeed;
         zombieAgent.angularSpeed = rotateSpeed;
-
+        //disabled for now to force patrolling state
         currentZombieBehavior = GetRandomBehaviour();
         initialZombieBehavior = currentZombieBehavior;
+
+        patrolledIndexesList.Clear();
     }
     private void Update()
     {
-        if (!hasGotInitialPosition)
-        {
-            if(zombieAgent.isOnNavMesh)
-            {
-                initialPosition = transform.position;
-                hasGotInitialPosition = true;
-            }
-        }
-        else
+        //the agent is grounded
+        if(zombieAgent.isOnNavMesh)
         {
             UpdateCharacterState();
         }
@@ -59,22 +58,160 @@ public class Zombie : CharacterBase
             case ZombieAIBehaviour.STATIONARY:
                 //add code here to change from stationary to 
                 //patrolling
+                m_isPatrolPosAcquired = false;
+                if (zombieDetection.hasDetectedAPlayer)
+                {
+                    currentZombieBehavior = ZombieAIBehaviour.DETECTED;
+                }
+                else if(!zombieDetection.hasDetectedAPlayer)
+                {
+                    zombieAgent.isStopped = true;
+                    if(m_currentWaitTime < maxWaitTime)
+                    {
+                        m_currentWaitTime += Time.deltaTime;
+                    }
+                    else if(m_currentWaitTime >= maxWaitTime)
+                    {
+                        m_currentWaitTime = 0;
+                        currentZombieBehavior = GetRandomBehaviour();
+                    }
+                }
                 break;
             case ZombieAIBehaviour.PATROLLING:
+                characterState = CharacterState.MOVING;
+                break;
+            case ZombieAIBehaviour.DETECTED:
                 characterState = CharacterState.MOVING;
                 break;
         }
     }
     protected override void MovingState()
     {
-     
+        if(currentZombieBehavior.Equals(ZombieAIBehaviour.DETECTED))
+        { 
+            zombieAgent.speed = moveSpeed;
+            //has detected a player
+            if (targetObject != null)
+            {
+                //chase player
+                isEating = zombieEater.isEating;
+                if(!isEating)
+                {
+                    zombieAgent.isStopped = false;
+                    zombieAgent.SetDestination(targetObject.transform.position);
+                }
+                else
+                {
+                    zombieAgent.isStopped = true;
+                    characterState = CharacterState.SPECIALACTION;
+                }
+
+            }
+            else if(targetObject == null)
+            {
+                //player is gone (either disconnected or turned already)
+                //go back to initial position
+                //reset state to what it was the first time
+                currentZombieBehavior = GetRandomBehaviour();
+                if (currentZombieBehavior.Equals(ZombieAIBehaviour.STATIONARY))
+                    characterState = CharacterState.IDLE;
+                else
+                {
+                    m_isPatrolPosAcquired = false;
+                }
+            }
+        }
+        else if (currentZombieBehavior.Equals(ZombieAIBehaviour.PATROLLING))
+        {
+            if (zombieDetection.hasDetectedAPlayer)
+            {
+                currentZombieBehavior = ZombieAIBehaviour.DETECTED;
+                m_isPatrolPosAcquired = false;
+            }
+            else if (!zombieDetection.hasDetectedAPlayer)
+            {
+                
+                if (!m_isPatrolPosAcquired)
+                {
+                    //patrol logic here
+                    zombieAgent.speed = (moveSpeed / 2f); //half move speed so that it will not be fast
+                    zombieAgent.isStopped = false;
+                    int randomIndex = GetRandomPatrolPoint();
+                    if (!patrolledIndexesList.Contains(randomIndex))
+                    {
+                        patrolledIndexesList.Add(randomIndex);
+                    }
+                    else
+                    {
+                        //if it already contains the index
+                        //contained equals amount of patrols count
+                        if ((patrolledIndexesList.Count).Equals(listOfPatrolPoints.Count))
+                        {
+                            patrolledIndexesList.Clear();
+                            randomIndex = GetRandomPatrolPoint();
+                            patrolledIndexesList.Add(randomIndex);
+                        }
+                        else
+                        {
+                            List<int> checkIndexList = new List<int>(patrolledIndexesList);
+                            checkIndexList.Sort();
+                            for (int i = 0; i < checkIndexList.Count; i++)
+                            {
+                                if (i != checkIndexList[i])
+                                {
+                                    randomIndex = i;
+                                    patrolledIndexesList.Add(i);
+                                    return;
+                                }
+                            }
+                        }
+                    }
+                    m_targetPatrolPosition = listOfPatrolPoints[randomIndex].transform.position;
+                    zombieAgent.SetDestination(m_targetPatrolPosition);
+                    m_isPatrolPosAcquired = true;
+                }
+                else
+                {
+                    if(zombieAgent.remainingDistance <= 0.1f)
+                    {
+                        currentZombieBehavior = GetRandomBehaviour();
+                        
+                        if (currentZombieBehavior.Equals(ZombieAIBehaviour.STATIONARY))
+                            characterState = CharacterState.IDLE;
+                        
+                        zombieAgent.isStopped = true;
+                        m_isPatrolPosAcquired = false;
+                    }
+                }
+            }
+        }
     }
     protected override void SpecialAction()
     {
         base.SpecialAction();
-        //for eating sequence;
-        //if done with the special action go back to the initial
-        //AI type
+        if(targetObject == null)
+        {
+            //the player has been eaten already or possible disconnection
+            //get back to random state that the zombie want to do
+            currentZombieBehavior = GetRandomBehaviour();
+            if (currentZombieBehavior.Equals(ZombieAIBehaviour.STATIONARY)) 
+            {
+                characterState = CharacterState.IDLE;
+                m_currentWaitTime = 0;
+                m_isPatrolPosAcquired = false;
+            }
+            else if (currentZombieBehavior.Equals(ZombieAIBehaviour.PATROLLING))
+            {
+                characterState = CharacterState.MOVING;
+                m_currentWaitTime = 0;
+                m_isPatrolPosAcquired = false;
+            }
+        }
+        else
+        {
+            // to look at whatever player it is
+            transform.LookAt(targetObject.transform);
+        }
     }
     #endregion
     private ZombieAIBehaviour GetRandomBehaviour()
@@ -85,6 +222,12 @@ public class Zombie : CharacterBase
         else
             return ZombieAIBehaviour.PATROLLING;
     }
+    private int GetRandomPatrolPoint()
+    {
+        int randomVal = Random.Range(0, listOfPatrolPoints.Count - 1);
+        return randomVal;
+    }
+    #region OLD CODE
     /*
     [SerializeField] ZombieDetection zombieDetection;
     [SerializeField] ZombieEater zombieEater;
@@ -227,4 +370,5 @@ public class Zombie : CharacterBase
         }
     }
     */
+    #endregion
 }
