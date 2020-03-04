@@ -185,6 +185,11 @@ MonoBehaviour:
   moveSpeed: 10
   rotateSpeed: 120
   characterState: 0
+  listOfPatrolPoints: []
+  initialZombieBehavior: 0
+  currentZombieBehavior: 0
+  isEating: 0
+  maxWaitTime: 5
 --- !u!195 &1714999096
 NavMeshAgent:
   m_ObjectHideFlags: 0

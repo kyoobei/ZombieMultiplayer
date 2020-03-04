@@ -5,7 +5,7 @@ using UnityEngine.AI;
 public class Zombie : CharacterBase
 {
     public List<GameObject> listOfPatrolPoints = new List<GameObject>();
-    [SerializeField] List<int> patrolledIndexesList = new List<int>();
+    List<int> patrolledIndexesList = new List<int>();
     NavMeshAgent zombieAgent;
     GameObject targetObject;
     ZombieDetection zombieDetection;
@@ -16,7 +16,6 @@ public class Zombie : CharacterBase
         PATROLLING,
         DETECTED
     };
-    [SerializeField] private ZombieAIBehaviour initialZombieBehavior;
     [SerializeField] private ZombieAIBehaviour currentZombieBehavior;
     [SerializeField] private bool isEating;
     [SerializeField] private float maxWaitTime;
@@ -37,7 +36,6 @@ public class Zombie : CharacterBase
         zombieAgent.angularSpeed = rotateSpeed;
         //disabled for now to force patrolling state
         currentZombieBehavior = GetRandomBehaviour();
-        initialZombieBehavior = currentZombieBehavior;
 
         patrolledIndexesList.Clear();
     }
@@ -175,9 +173,12 @@ public class Zombie : CharacterBase
                     if(zombieAgent.remainingDistance <= 0.1f)
                     {
                         currentZombieBehavior = GetRandomBehaviour();
-                        
+
                         if (currentZombieBehavior.Equals(ZombieAIBehaviour.STATIONARY))
+                        {
+                            m_currentWaitTime = 0;
                             characterState = CharacterState.IDLE;
+                        }
                         
                         zombieAgent.isStopped = true;
                         m_isPatrolPosAcquired = false;
@@ -189,6 +190,7 @@ public class Zombie : CharacterBase
     protected override void SpecialAction()
     {
         base.SpecialAction();
+        zombieAgent.isStopped = true;
         if(targetObject == null)
         {
             //the player has been eaten already or possible disconnection
@@ -211,6 +213,7 @@ public class Zombie : CharacterBase
         {
             // to look at whatever player it is
             transform.LookAt(targetObject.transform);
+            m_currentWaitTime = 0;
         }
     }
     #endregion

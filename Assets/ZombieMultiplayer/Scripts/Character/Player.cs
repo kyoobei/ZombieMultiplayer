@@ -13,6 +13,7 @@ public class Player : CharacterBase
         IsBeingTurned,
         IsMonster
     };
+    [SerializeField] Camera playerCamera;
     [Header("Checkers")]
     [SerializeField] PlayerStateEnum pState;
     [Header("Human")]
@@ -21,6 +22,8 @@ public class Player : CharacterBase
     [Header("Monster")]
     [SerializeField] GameObject monsterModel;
     [SerializeField] GameObject monsterLight;
+
+    public Joystick playerJoystick;
 
     float verticalVal;
     float horizontalVal;
@@ -40,8 +43,11 @@ public class Player : CharacterBase
     }
     private void UpdatePlayerInputs()
     {
-        horizontalVal = Input.GetAxis("Horizontal");
-        verticalVal = Input.GetAxis("Vertical");
+        horizontalVal = playerJoystick.Horizontal;//Input.GetAxis("Horizontal");
+        verticalVal = playerJoystick.Vertical;//Input.GetAxis("Vertical");
+
+        Debug.Log("Player joystick hor: " + playerJoystick.Horizontal +
+            " Player joystic ver: " + playerJoystick.Vertical);
 
         Vector3 forwardMovement = transform.forward * verticalVal;
         Vector3 sidewardMovement = transform.right * horizontalVal;

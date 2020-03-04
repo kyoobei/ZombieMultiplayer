@@ -251,15 +251,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 10
-  rotateSpeed: 2
+  rotateSpeed: 4
+  characterState: 0
+  playerCamera: {fileID: 5512538022305093234}
+  pState: 0
   humanModel: {fileID: 5512538021809287583}
-  monsterModel: {fileID: 6285860040827101715}
-  humanAnim: {fileID: 5512538021847626263}
-  monsterAnim: {fileID: 5512538022316760667}
-  animatorToUse: {fileID: 0}
-  transformerTimer: 2
   humanLight: {fileID: 5512538022169872655}
+  monsterModel: {fileID: 6285860040827101715}
   monsterLight: {fileID: 5512538021877721810}
+  playerJoystick: {fileID: 0}
 --- !u!143 &5512538022255702323
 CharacterController:
   m_ObjectHideFlags: 0
@@ -289,7 +289,6 @@ GameObject:
   - component: {fileID: 5512538022305093235}
   - component: {fileID: 5512538022305093234}
   - component: {fileID: 5512538022305093233}
-  - component: {fileID: 5512538022305093196}
   m_Layer: 0
   m_Name: PlayerCamera
   m_TagString: MainCamera
@@ -362,22 +361,6 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5512538022305093232}
   m_Enabled: 1
---- !u!114 &5512538022305093196
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5512538022305093232}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0f53425af1310094c8c0699f7c4cd9fe, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  target: {fileID: 0}
-  targetType: 0
-  offset: {x: 0, y: 5, z: 0}
-  smoothTime: 0.5
 --- !u!95 &5512538022316760667
 Animator:
   serializedVersion: 3

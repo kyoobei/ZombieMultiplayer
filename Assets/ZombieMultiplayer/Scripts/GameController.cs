@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
-    public bool isAServer;
     /// <summary>
     /// this part deals with the numerous states of the game
     /// <para> Inital - use this zombie spawning or doing some
@@ -16,26 +15,124 @@ public class GameController : MonoBehaviour
     /// </summary>
     private enum GameState
     {
-        Inital,
+        None,
         GameStart,
         GameEnd
     };
+    public enum GameOwner
+    {
+        None,                   //not yet set who is the owner of the game
+        Server,                 //server owns the game 
+        Client,                 //client or the player itself owns the game
+        Test                    //client still owns the game but should release enemy (singleplayer mode)
+    };
+    [SerializeField] GameUIController gameUIController;
+    [SerializeField] GameSpawner gameSpawner;
     [SerializeField] private GameState gameState;
-
+    public GameOwner gameOwner;
+    public int gameSeconds;
+    bool isDone;
+    int gameSecondsHolder;
     private void Start()
     {
-        gameState = GameState.Inital;   
+        if(gameSeconds <= 0)
+        {
+            Debug.LogError("Put seconds on the GameController object");
+            return;
+        }
     }
     private void Update()
     {
-        switch(gameState)
+        if (gameSeconds <= 0)
         {
-            case GameState.Inital:
+            Debug.LogError("Put seconds on the GameController object");
+            return;
+        }
+
+        if (!isDone)
+        {
+            UpdateGamesettings();
+        }
+        else
+        {
+            UpdateGameStates();
+        }
+    }
+    private void UpdateGamesettings()
+    {
+        switch(gameOwner)
+        {
+            case GameOwner.None:
+                //do nothing
+                gameState = GameState.None;
+                gameUIController.DeactivateAllUI();
                 break;
-            case GameState.GameStart:
+            case GameOwner.Client:
+                gameSecondsHolder = gameSeconds;
+
+                gameUIController.ActivateClientUi();
+                gameState = GameState.GameStart;
+                isDone = true;
                 break;
-            case GameState.GameEnd:
+            case GameOwner.Server:
+                gameSecondsHolder = gameSeconds;
+
+                gameUIController.ActivateServerUI();
+                StartCoroutine(StartCountdownOnServer());
+                gameState = GameState.GameStart;
+                isDone = true;
+                break;
+            case GameOwner.Test:
+                gameSecondsHolder = gameSeconds;
+
+                gameSpawner.InitializePlayerSpawn();
+                gameSpawner.InitializeEnemySpawn();
+                gameSpawner.StartSpawningEnemiesLocally(2);
+                gameSpawner.StartSpawningPlayerLocally
+                    (
+                        gameUIController.GetPlayerJoystick
+                    );
+
+                gameUIController.ActivateTestUI();
+                StartCoroutine(StartCountdownOnServer());
+                gameState = GameState.GameStart;
+                isDone = true;
                 break;
         }
     }
+    IEnumerator StartCountdownOnServer()
+    {
+        while(gameSecondsHolder >= 1)
+        {
+            gameSecondsHolder -= 1;
+            gameUIController.OnGameTimerDisplayUpdate(gameSecondsHolder);
+            yield return new WaitForSeconds(1f);
+            if(gameSecondsHolder <= 0)
+            {
+                gameState = GameState.GameEnd;
+            }
+        }
+    }
+    private void UpdateGameStates()
+    {
+        switch(gameState)
+        {
+            case GameState.GameStart:
+                StartGame();
+                break;
+            case GameState.GameEnd:
+                EndGame();
+                break;
+        }
+    }
+    void StartGame()
+    {
+        //do game start code here
+    }
+    void EndGame()
+    {
+        //do game end here
+        Debug.Log("game has ended");
+    }
+    
 }

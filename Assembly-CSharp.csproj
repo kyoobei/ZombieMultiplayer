@@ -83,6 +83,7 @@
     <Compile Include="Assets\unity-chan!\Unity-chan! Model\Scripts\UnityChanControlScriptWithRgidBody.cs" />
     <Compile Include="Assets\unity-chan!\Unity-chan! Model\SplashScreen\Scripts\SplashScreen.cs" />
     <Compile Include="Assets\ZombieMultiplayer\Scripts\Camera\CameraFollow.cs" />
+    <Compile Include="Assets\ZombieMultiplayer\Scripts\Camera\CameraHandler.cs" />
     <Compile Include="Assets\ZombieMultiplayer\Scripts\Character\CharacterBase.cs" />
     <Compile Include="Assets\ZombieMultiplayer\Scripts\Character\Player.cs" />
     <Compile Include="Assets\ZombieMultiplayer\Scripts\Character\SpawnEnemies.cs" />
@@ -91,12 +92,14 @@
     <Compile Include="Assets\ZombieMultiplayer\Scripts\Character\ZombieDetection.cs" />
     <Compile Include="Assets\ZombieMultiplayer\Scripts\Character\ZombieEater.cs" />
     <Compile Include="Assets\ZombieMultiplayer\Scripts\GameController.cs" />
+    <Compile Include="Assets\ZombieMultiplayer\Scripts\GameSpawner.cs" />
     <Compile Include="Assets\ZombieMultiplayer\Scripts\NetworkMaker\NMClientDiscovery.cs" />
     <Compile Include="Assets\ZombieMultiplayer\Scripts\NetworkMaker\NMDefaultConstants.cs" />
     <Compile Include="Assets\ZombieMultiplayer\Scripts\NetworkMaker\NMLanInfoConnection.cs" />
     <Compile Include="Assets\ZombieMultiplayer\Scripts\NetworkMaker\NMLobbyManager.cs" />
     <Compile Include="Assets\ZombieMultiplayer\Scripts\NetworkMaker\NMNetworkHandler.cs" />
     <Compile Include="Assets\ZombieMultiplayer\Scripts\NetworkMaker\NMServerDiscovery.cs" />
+    <Compile Include="Assets\ZombieMultiplayer\Scripts\UI\GameUIController.cs" />
     <Compile Include="Assets\ZombieMultiplayer\Scripts\UI\LobbyUIManager.cs" />
     <None Include="Assets\unity-chan!\Unity-chan! Model\Art\UnityChanShader\Shader\Unitychan_chara_eye.shader" />
     <None Include="Assets\unity-chan!\Unity-chan! Model\Art\UnityChanShader\Shader\Unitychan_chara_fuku.shader" />
