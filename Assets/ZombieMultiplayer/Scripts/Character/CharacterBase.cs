@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
-public class CharacterBase : MonoBehaviour
+public class CharacterBase : NetworkBehaviour
 {
     /// <summary>
     /// deals with move speed of whatever the character is

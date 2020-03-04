@@ -1,8 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public class GameSpawner : MonoBehaviour
+using UnityEngine.Networking;
+public class GameSpawner : NetworkBehaviour
 {
     [Header("Enemy Spawn")]
     [SerializeField] GameObject enemySpawnLocationHolder;
@@ -83,8 +83,12 @@ public class GameSpawner : MonoBehaviour
     /// <param name="numberOfEnemiesToSpawn"></param>
     public void StartSpawningEnemiesNetwork(int numberOfEnemiesToSpawn)
     {
+        if (!isServer)
+            return;
+
         if (enemySpawnPositionList.Count <= 0)
             return;
+
 
         //do logic here later
     }

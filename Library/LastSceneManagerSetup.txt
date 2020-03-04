@@ -1,5 +1,5 @@
 sceneSetups:
-- path: Assets/ZombieMultiplayer/Scenes/scene_player_mainGame.unity
+- path: Assets/ZombieMultiplayer/Scenes/scene_player_lobby.unity
   isLoaded: 1
   isActive: 1
   isSubScene: 0

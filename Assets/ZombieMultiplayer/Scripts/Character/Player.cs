@@ -4,6 +4,9 @@ using UnityEngine;
 using UnityEngine.Networking;
 public class Player : CharacterBase
 {
+    const string TAG_PLAYER = "Player";
+    const string TAG_ZOMBIE = "Zombie";
+
     CharacterController m_charController;
     Animator m_animatorToUse;
     enum PlayerStateEnum
@@ -14,8 +17,9 @@ public class Player : CharacterBase
         IsMonster
     };
     [SerializeField] Camera playerCamera;
-    [Header("Checkers")]
+    [Header("Others")]
     [SerializeField] PlayerStateEnum pState;
+    [SerializeField] float transformTimer;
     [Header("Human")]
     [SerializeField] GameObject humanModel;
     [SerializeField] GameObject humanLight;
@@ -27,27 +31,45 @@ public class Player : CharacterBase
 
     float verticalVal;
     float horizontalVal;
+    bool isBeingTurned;
+    bool isTransforming;
+
+    string currentTag;
+
     private void Awake()
     {
         m_charController = GetComponent<CharacterController>();
     }
     private void Start()
     {
-        pState = PlayerStateEnum.IsHuman;
-        LoadHumanSettings();
+        if (isLocalPlayer)
+        {
+            pState = PlayerStateEnum.IsHuman;
+            LoadHumanSettings();
+        }
     }
     private void Update()
     {
-        UpdatePlayerInputs();
+        //make sure this doesnt affect networked objects
+
+        if (!isLocalPlayer)
+            return;
+
+        if (!pState.Equals(PlayerStateEnum.IsBeingTurned))
+        {
+            UpdatePlayerInputs();
+        }
+        else
+        {
+            horizontalVal = 0f;
+            verticalVal = 0f;
+        }
         UpdateCharacterState();
     }
     private void UpdatePlayerInputs()
     {
         horizontalVal = playerJoystick.Horizontal;//Input.GetAxis("Horizontal");
         verticalVal = playerJoystick.Vertical;//Input.GetAxis("Vertical");
-
-        Debug.Log("Player joystick hor: " + playerJoystick.Horizontal +
-            " Player joystic ver: " + playerJoystick.Vertical);
 
         Vector3 forwardMovement = transform.forward * verticalVal;
         Vector3 sidewardMovement = transform.right * horizontalVal;
@@ -65,28 +87,30 @@ public class Player : CharacterBase
     }
     private void LoadHumanSettings()
     {
+        currentTag = TAG_PLAYER;
         if (monsterModel.activeInHierarchy)
         {
             monsterModel.SetActive(false);
-            monsterLight.SetActive(false);
+            //monsterLight.SetActive(false);
         }
         if(!humanModel.activeInHierarchy)
         {
-            humanLight.SetActive(true);
+            //humanLight.SetActive(true);
             humanModel.SetActive(true);
             m_animatorToUse = humanModel.GetComponent<Animator>(); 
         }
     }
     private void LoadMonsterSettings()
     {
+        currentTag = TAG_ZOMBIE;
         if (humanModel.activeInHierarchy)
         {
             humanModel.SetActive(false);
-            humanLight.SetActive(false);
+            //humanLight.SetActive(false);
         }
         if(!monsterModel.activeInHierarchy)
         {
-            monsterLight.SetActive(true); 
+            //monsterLight.SetActive(true); 
             monsterModel.SetActive(true);
             m_animatorToUse = monsterModel.GetComponent<Animator>();
         }
@@ -101,6 +125,13 @@ public class Player : CharacterBase
         {
             characterState = CharacterState.MOVING;
         }
+
+        if (isBeingTurned)
+        {
+            pState = PlayerStateEnum.IsBeingTurned;
+            characterState = CharacterState.SPECIALACTION;
+            isBeingTurned = false;
+        }
     }
     protected override void MovingState()
     {
@@ -112,12 +143,36 @@ public class Player : CharacterBase
         {
             characterState = CharacterState.IDLE;
         }
+
+        if(isBeingTurned)
+        {
+            characterState = CharacterState.SPECIALACTION;
+            isBeingTurned = false;
+        }
     }
     protected override void SpecialAction()
     {
-        base.SpecialAction();
+        base.SpecialAction(); 
+        pState = PlayerStateEnum.IsBeingTurned;
+        if(!isTransforming)
+        {
+            StartCoroutine(StartTransformingToZombie());
+            isTransforming = true;
+        }
     }
     #endregion
+    IEnumerator StartTransformingToZombie()
+    {
+        yield return new WaitForSeconds(transformTimer);
+        LoadMonsterSettings();
+        characterState = CharacterState.IDLE;
+        pState = PlayerStateEnum.IsMonster;
+    }
+    public void OnEaten()
+    {
+        isBeingTurned = true;
+        //SpecialAction();
+    }
     //in case a reset is needed
     public void ResetEverything()
     {
@@ -128,164 +183,4 @@ public class Player : CharacterBase
         m_animatorToUse = null;
         pState = PlayerStateEnum.None;
     }
-   /*
-    * 
-    [SerializeField] float transformerTimer;
-    [SerializeField] GameObject humanLight;
-    [SerializeField] GameObject monsterLight;
-   
-    float currentTransformerTimer;
-    NetworkIdentity playerIdentity;
-    //Rigidbody playerRigidbody;
-    CharacterController characterController;
-    CameraFollow mainCamFollow;
-    //Vector3 movement = new Vector3(0, 0, 0);
-    enum PlayerState
-    {
-        None,
-        IsHuman,
-        IsBeingTurned,
-        IsMonster
-    };
-    PlayerState playerState;
-    bool isInitialized;
-    bool startTransformTimer;
-    private void Start()
-    {
-        if(GetComponent<NetworkIdentity>() != null)
-            playerIdentity = GetComponent<NetworkIdentity>();
-        
-        characterController = GetComponent<CharacterController>();
-        mainCamFollow = Camera.main.GetComponent<CameraFollow>();
-        //playerRigidbody = GetComponent<Rigidbody>();
-        playerState = PlayerState.IsHuman;
-
-        LoadHumanModel();
-        //if (!playerIdentity.localPlayerAuthority)
-        //{
-            mainCamFollow.target = this.transform;
-            mainCamFollow.targetType = CameraFollow.TargetType.Player;
-       // }
-    }
-    private void Update()
-    {
-        UpdatePlayerState();
-    }
-
-    private void UpdatePlayerInputs()
-    {
-        //WASD
-#if UNITY_EDITOR || UNITY_STANDALONE_WIN
-        
-        //movement = new Vector3
-        //    (
-        //        Input.GetAxis("Horizontal"),
-        //        0,
-        //        Input.GetAxis("Vertical")
-        //    );
-            
-        float horValue = Input.GetAxis("Horizontal");
-        float verValue = Input.GetAxis("Vertical");
-
-        Vector3 forwardMovement = transform.forward * verValue;
-        Vector3 rightMovement = transform.right * horValue;
-        Vector3 rotational = new Vector3(horValue, 0f, 0f);
-        Quaternion desiredRot = Quaternion.LookRotation(rotational);
-
-        if (animatorToUse != null) 
-        {
-            if (Mathf.Abs(verValue) > 0.1f || Mathf.Abs(horValue) > 0.1f)
-                animatorToUse.SetFloat("movement", 0.2f);
-            else
-                animatorToUse.SetFloat("movement", 0f);
-        }
-        characterController.SimpleMove
-            (
-                Vector3.ClampMagnitude(forwardMovement + rightMovement, 1.0f) * moveSpeed
-            );
-        transform.Rotate(0, horValue * rotateSpeed, 0);
-        //transform.rotation = Quaternion.Slerp(transform.rotation, desiredRot, rotateSpeed * Time.deltaTime);
-#endif
-    }
-    private void UpdatePlayerState()
-    {
-        switch (playerState)
-        {
-            case PlayerState.None:
-                ResetValues();
-                break;
-            case PlayerState.IsHuman:
-                //do what humans do
-                LoadHumanModel();
-                UpdatePlayerInputs();
-                break;
-            case PlayerState.IsBeingTurned:
-                //short pause here to play the animation of it
-                //being eaten
-                if (!startTransformTimer)
-                {
-                    StartCoroutine(TimerForBeingTurned());
-                    animatorToUse.SetTrigger("isAttacked");
-                    startTransformTimer = true;
-                }
-                if(IsDoneBeingTurned())
-                {
-                    playerState = PlayerState.IsMonster;
-                }
-                break;
-            case PlayerState.IsMonster:
-                transform.tag = "Zombie";
-                LoadMonsterModel();
-                UpdatePlayerInputs();
-                break;
-        }
-    }
-    public void InitiateBeingEaten()
-    {
-        playerState = PlayerState.IsBeingTurned;
-    }
-    bool IsDoneBeingTurned()
-    {
-        if(currentTransformerTimer >= transformerTimer)
-        {
-            return true;
-        }
-        return false;
-    }
-    IEnumerator TimerForBeingTurned()
-    {
-        while(currentTransformerTimer <= transformerTimer)
-        {
-            yield return new WaitForSeconds(1.0f);
-            currentTransformerTimer += 1;
-        }
-    }
-    protected override void ResetValues()
-    {
-        base.ResetValues();
-        startTransformTimer = false;
-        currentTransformerTimer = 0;
-        //movement = Vector3.zero;
-        //stop coroutine from perfoming if it is runing
-        StopCoroutine(TimerForBeingTurned());
-    }
-    protected override void LoadHumanModel()
-    {
-        base.LoadHumanModel();
-        monsterLight.SetActive(false);
-        humanLight.SetActive(true);
-    }
-    protected override void LoadMonsterModel()
-    {
-        base.LoadMonsterModel();
-        monsterLight.SetActive(true);
-        humanLight.SetActive(false);
-    }
-    protected override void DeactivateAllModels()
-    {
-        base.DeactivateAllModels();
-        monsterLight.SetActive(false);
-        humanLight.SetActive(false);
-    }
-    */
 }

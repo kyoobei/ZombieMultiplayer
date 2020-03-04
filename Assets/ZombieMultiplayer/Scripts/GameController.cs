@@ -1,8 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public class GameController : MonoBehaviour
+using UnityEngine.Networking;
+public class GameController : NetworkBehaviour
 {
     /// <summary>
     /// this part deals with the numerous states of the game
@@ -35,6 +35,9 @@ public class GameController : MonoBehaviour
     int gameSecondsHolder;
     private void Start()
     {
+        if (!isServer)
+            return;
+
         if(gameSeconds <= 0)
         {
             Debug.LogError("Put seconds on the GameController object");
@@ -43,6 +46,9 @@ public class GameController : MonoBehaviour
     }
     private void Update()
     {
+        if (!isServer)
+            return;
+        
         if (gameSeconds <= 0)
         {
             Debug.LogError("Put seconds on the GameController object");
@@ -78,6 +84,8 @@ public class GameController : MonoBehaviour
                 gameSecondsHolder = gameSeconds;
 
                 gameUIController.ActivateServerUI();
+                //gameSpawner.InitializeEnemySpawn();
+
                 StartCoroutine(StartCountdownOnServer());
                 gameState = GameState.GameStart;
                 isDone = true;
@@ -87,7 +95,7 @@ public class GameController : MonoBehaviour
 
                 gameSpawner.InitializePlayerSpawn();
                 gameSpawner.InitializeEnemySpawn();
-                gameSpawner.StartSpawningEnemiesLocally(2);
+                gameSpawner.StartSpawningEnemiesLocally(1);
                 gameSpawner.StartSpawningPlayerLocally
                     (
                         gameUIController.GetPlayerJoystick

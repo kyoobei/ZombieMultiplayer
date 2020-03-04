@@ -10,29 +10,37 @@ public class ZombieEater : MonoBehaviour
     {
         if(other.tag.Equals("Player"))
         {
+            //if the zombie is eating already no need to detect anyone else
+            if (targetEaten != null)
+                return;
+
             isEating = true;
             targetEaten = other.gameObject;
         }
     }
     public void OnTriggerStay(Collider other)
     {
+      
         if(other.tag.Equals("Player"))
         {
+            if (targetEaten != null)
+                return;
+
             if(!isEating)
             {
                 isEating = true;
                 targetEaten = other.gameObject;
             }
         }
-        else
+        else if(other.tag.Equals("Zombie"))
         {
-            targetEaten = null;
-            isEating = false;
+            //if it is the same object but the tag has been changed
+            //then eating should be done
+            if (other.gameObject == targetEaten)
+            {
+                isEating = false;
+                targetEaten = null;
+            }
         }
-    }
-    public void OnTriggerExit(Collider other)
-    {
-        isEating = false;
-        targetEaten = null;
     }
 }

@@ -4,12 +4,15 @@ using UnityEngine;
 using UnityEngine.AI;
 public class Zombie : CharacterBase
 {
+    [SerializeField] GameObject zombieDetectionHolder;
+    [SerializeField] GameObject zombieEaterHolder;
+    [SerializeField] Animator zombieAIAnimator;
+
     public List<GameObject> listOfPatrolPoints = new List<GameObject>();
     List<int> patrolledIndexesList = new List<int>();
+    ZombieDetection zombieDetection;
     NavMeshAgent zombieAgent;
     GameObject targetObject;
-    ZombieDetection zombieDetection;
-    ZombieEater zombieEater;
     enum ZombieAIBehaviour
     {
         STATIONARY,
@@ -29,9 +32,14 @@ public class Zombie : CharacterBase
     }
     private void Start()
     {
-        zombieDetection = GetComponentInChildren<ZombieDetection>();
-        zombieEater = GetComponentInChildren<ZombieEater>();
+        //add logic here that on client side i wont initialize anything
+        //turn off zombie detection and zombie eater to avoid unnecesarry computations
+        if (!isServer)
+            return;
 
+        zombieDetectionHolder.SetActive(true);
+        zombieEaterHolder.SetActive(true);
+        zombieDetection = zombieDetectionHolder.GetComponent<ZombieDetection>();
         zombieAgent.speed = moveSpeed;
         zombieAgent.angularSpeed = rotateSpeed;
         //disabled for now to force patrolling state
@@ -41,8 +49,11 @@ public class Zombie : CharacterBase
     }
     private void Update()
     {
+        //add logic here that on client side i wont initialize anything
+        if (!isServer)
+            return;
         //the agent is grounded
-        if(zombieAgent.isOnNavMesh)
+        if (zombieAgent.isOnNavMesh)
         {
             UpdateCharacterState();
         }
@@ -59,6 +70,7 @@ public class Zombie : CharacterBase
                 m_isPatrolPosAcquired = false;
                 if (zombieDetection.hasDetectedAPlayer)
                 {
+                    targetObject = zombieDetection.target;
                     currentZombieBehavior = ZombieAIBehaviour.DETECTED;
                 }
                 else if(!zombieDetection.hasDetectedAPlayer)
@@ -92,7 +104,7 @@ public class Zombie : CharacterBase
             if (targetObject != null)
             {
                 //chase player
-                isEating = zombieEater.isEating;
+                isEating = zombieDetection.isEating;
                 if(!isEating)
                 {
                     zombieAgent.isStopped = false;
@@ -101,6 +113,9 @@ public class Zombie : CharacterBase
                 else
                 {
                     zombieAgent.isStopped = true;
+                    //perform animation here
+                    Player tPlayer = targetObject.GetComponent<Player>();
+                    tPlayer.OnEaten();
                     characterState = CharacterState.SPECIALACTION;
                 }
 
@@ -123,6 +138,7 @@ public class Zombie : CharacterBase
         {
             if (zombieDetection.hasDetectedAPlayer)
             {
+                targetObject = zombieDetection.target;
                 currentZombieBehavior = ZombieAIBehaviour.DETECTED;
                 m_isPatrolPosAcquired = false;
             }
@@ -191,10 +207,13 @@ public class Zombie : CharacterBase
     {
         base.SpecialAction();
         zombieAgent.isStopped = true;
-        if(targetObject == null)
+        isEating = zombieDetection.isEating;
+        
+        if (!isEating)
         {
             //the player has been eaten already or possible disconnection
             //get back to random state that the zombie want to do
+            targetObject = null;
             currentZombieBehavior = GetRandomBehaviour();
             if (currentZombieBehavior.Equals(ZombieAIBehaviour.STATIONARY)) 
             {
@@ -209,10 +228,16 @@ public class Zombie : CharacterBase
                 m_isPatrolPosAcquired = false;
             }
         }
-        else
+        else if(isEating)
         {
             // to look at whatever player it is
-            transform.LookAt(targetObject.transform);
+            Vector3 newTargetPostion = new Vector3
+                (
+                    targetObject.transform.position.x,
+                    transform.position.y,
+                    targetObject.transform.position.z
+                );
+            transform.LookAt(newTargetPostion);
             m_currentWaitTime = 0;
         }
     }
@@ -230,148 +255,4 @@ public class Zombie : CharacterBase
         int randomVal = Random.Range(0, listOfPatrolPoints.Count - 1);
         return randomVal;
     }
-    #region OLD CODE
-    /*
-    [SerializeField] ZombieDetection zombieDetection;
-    [SerializeField] ZombieEater zombieEater;
-    [SerializeField] GameObject target;
-    [SerializeField] Animator zombieAnimator;
-    NavMeshAgent zombieAgent;
-
-    public float moveSpeed;
-    public float multiplierSpeed;
-
-    private Vector3 initialPosSummoned;
-    bool getInitialPos;
-    public enum ZombieType
-    {
-        STATIONARY,
-        PATROLLING
-    };
-    public enum ZombieState
-    {
-        IDLE,
-        CHASING,
-        EATING
-    };
-    public ZombieState zombieState;
-    public ZombieType zombieType;
-
-    Rigidbody zombieRigidbody;
-    CharacterController characterController;
-    bool isEating;
-    private void Start()
-    {
-        zombieRigidbody = GetComponent<Rigidbody>();
-        zombieAgent = GetComponent<NavMeshAgent>();
-        //characterController = GetComponent<CharacterController>();
-        
-    }
-    private void Update()
-    {
-        UpdateState();
-    }
-    void UpdateState()
-    {
-        switch(zombieState)
-        {
-            case ZombieState.IDLE:
-                
-                if(zombieDetection.hasDetectedAPlayer)
-                {
-                    zombieState = ZombieState.CHASING;
-                    target = zombieDetection.target;
-                }
-                else
-                {
-                    MovePersonally();
-                    target = null; 
-                }
-                isEating = false;
-                break;
-            case ZombieState.CHASING:
-                if(!zombieDetection.hasDetectedAPlayer)
-                {
-                    
-                    zombieState = ZombieState.IDLE;
-                }
-                MoveTowardsPlayer();
-                if (zombieEater.isEating)
-                {
-                    target = zombieEater.targetEaten;
-                    zombieState = ZombieState.EATING;
-                }
-                break;
-            case ZombieState.EATING:
-                UpdateEating();
-                //perform animation of eating then if eaten
-                //then back to idle state
-                break;
-        }
-    }
-    void MovePersonally()
-    {
-        if(!getInitialPos)
-        {
-            initialPosSummoned = transform.position;
-            getInitialPos = true;
-        }
-        float distance = Vector3.Distance(initialPosSummoned, transform.position);
-        if(distance <= 0.3f)
-        {
-            zombieAnimator.SetFloat("movement", 0f);
-        }
-        else
-        {
-            zombieAgent.SetDestination(initialPosSummoned);
-            zombieAnimator.SetFloat("movement", 0.2f);
-        }
-    }
-    void MoveTowardsPlayer()
-    {
-        if(target != null)
-        {
-            transform.LookAt(
-                new Vector3
-                (
-                    target.transform.position.x, 
-                    transform.position.y,
-                    target.transform.position.z
-                ));
-           
-            zombieAgent.SetDestination(target.transform.position);
-            zombieAnimator.SetFloat("movement", 0.2f);
-        }
-    }
-    private void UpdateEating()
-    {
-        if(!isEating)
-        {
-            if (target != null)
-            {
-                zombieAnimator.SetBool("isAttacking", true);
-                //Player playerDetected = target.GetComponent<Player>();
-                //playerDetected.InitiateBeingEaten();
-                isEating = true;
-            }
-        }
-        if(zombieEater.targetEaten == null)
-        {
-            zombieAnimator.SetBool("isAttacking", false);
-            isEating = false;
-            zombieState = ZombieState.IDLE;
-        }
-    }
-    void UpdateIdleStateOfZombie()
-    {
-        switch(zombieType)
-        {
-            case ZombieType.STATIONARY:
-                break;
-            case ZombieType.PATROLLING:
-                break;
-        }
-    }
-    */
-    #endregion
 }
