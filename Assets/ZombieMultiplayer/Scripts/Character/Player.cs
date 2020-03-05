@@ -34,6 +34,14 @@ public class Player : CharacterBase
     bool isBeingTurned;
     bool isTransforming;
 
+    public float positionUpdateRate = 0.2f;
+    public float smoothing = 15f;
+
+    Vector3 myPlayerPosition;
+    Quaternion myRotation;
+    Transform myTransform;
+
+    [SyncVar]
     string currentTag;
 
     private void Awake()
@@ -42,15 +50,26 @@ public class Player : CharacterBase
     }
     private void Start()
     {
+        myTransform = transform;
+
         if (isLocalPlayer)
         {
+            Camera maincam = Camera.main;
+            maincam.gameObject.SetActive(false);
+            playerCamera.gameObject.SetActive(true);
+            if(playerJoystick == null)
+            {
+                playerJoystick = FindObjectOfType<Joystick>();
+            }
             pState = PlayerStateEnum.IsHuman;
-            LoadHumanSettings();
+            LoadHumanSettingsLocal();
+            StartCoroutine(UpdatePositionOverTheNetwork());
         }
     }
     private void Update()
     {
         //make sure this doesnt affect networked objects
+        LerpPosition();
 
         if (!isLocalPlayer)
             return;
@@ -65,6 +84,38 @@ public class Player : CharacterBase
             verticalVal = 0f;
         }
         UpdateCharacterState();
+    }
+    void LerpPosition()
+    {
+        if (isLocalPlayer)
+            return;
+
+        myTransform.position = Vector3.Lerp(myTransform.position, myPlayerPosition,
+            Time.deltaTime * smoothing);
+
+        myTransform.rotation = Quaternion.Lerp(myTransform.rotation, myRotation,
+            Time.deltaTime * smoothing);
+    }
+    IEnumerator UpdatePositionOverTheNetwork()
+    {
+        while(enabled)
+        {
+            CmdSendPosition(myTransform.position, myTransform.rotation);
+            yield return new WaitForSeconds(positionUpdateRate);
+        }
+    }
+    [Command]
+    private void CmdSendPosition(Vector3 position, Quaternion rot)
+    {
+        myPlayerPosition = position;
+        myRotation = rot;
+        RpcRecievePosition(position, rot);
+    }
+    [ClientRpc]
+    private void RpcRecievePosition(Vector3 position, Quaternion rot)
+    {
+        myPlayerPosition = position;
+        myRotation = rot;
     }
     private void UpdatePlayerInputs()
     {
@@ -85,33 +136,74 @@ public class Player : CharacterBase
         //for rotation
         transform.Rotate(0, horizontalVal * rotateSpeed, 0);
     }
-    private void LoadHumanSettings()
+    [Command]
+    private void CmdLoadHumanSettings()
     {
         currentTag = TAG_PLAYER;
+        transform.tag = currentTag;
+
+        RpcLoadHumanSettings();
+
+        monsterModel.SetActive(false);
+        humanModel.SetActive(true);
+    }
+    [ClientRpc]
+    private void RpcLoadHumanSettings()
+    {
+        currentTag = TAG_PLAYER;
+        transform.tag = currentTag;
+
+        monsterModel.SetActive(false);
+        humanModel.SetActive(true);
+    }
+    void LoadHumanSettingsLocal()
+    {
         if (monsterModel.activeInHierarchy)
         {
             monsterModel.SetActive(false);
-            //monsterLight.SetActive(false);
+            monsterLight.SetActive(false);
         }
-        if(!humanModel.activeInHierarchy)
+        if (!humanModel.activeInHierarchy)
         {
-            //humanLight.SetActive(true);
+            humanLight.SetActive(true);
             humanModel.SetActive(true);
-            m_animatorToUse = humanModel.GetComponent<Animator>(); 
+            CmdLoadHumanSettings();
+            m_animatorToUse = humanModel.GetComponent<Animator>();
         }
     }
-    private void LoadMonsterSettings()
+
+    [Command]
+    private void CmdLoadMonsterSettings()
     {
         currentTag = TAG_ZOMBIE;
+        transform.tag = currentTag;
+
+        RpcLoadMonsterSettings();
+
+        monsterModel.SetActive(true);
+        humanModel.SetActive(true);
+    }
+    [ClientRpc]
+    private void RpcLoadMonsterSettings()
+    {
+        currentTag = TAG_ZOMBIE;
+        transform.tag = currentTag;
+
+        monsterModel.SetActive(true);
+        humanModel.SetActive(true);
+    }
+    void LoadMonsterSettingsLocal()
+    {
         if (humanModel.activeInHierarchy)
         {
             humanModel.SetActive(false);
-            //humanLight.SetActive(false);
+            humanLight.SetActive(false);
         }
-        if(!monsterModel.activeInHierarchy)
+        if (!monsterModel.activeInHierarchy)
         {
-            //monsterLight.SetActive(true); 
+            monsterLight.SetActive(true);
             monsterModel.SetActive(true);
+            CmdLoadMonsterSettings();
             m_animatorToUse = monsterModel.GetComponent<Animator>();
         }
     }
@@ -164,7 +256,7 @@ public class Player : CharacterBase
     IEnumerator StartTransformingToZombie()
     {
         yield return new WaitForSeconds(transformTimer);
-        LoadMonsterSettings();
+        LoadMonsterSettingsLocal();
         characterState = CharacterState.IDLE;
         pState = PlayerStateEnum.IsMonster;
     }

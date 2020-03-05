@@ -18,16 +18,6 @@ namespace NetworkMaker
         #endregion 
         [Header("NETWORK DATA")]
         /// <summary>
-        /// If this object should start as a server make sure
-        /// to check this component and if this should start as a client
-        /// this should be false
-        /// </summary>
-        public bool isAServer;
-        /// <summary>
-        /// Immidiately start server broadcast or use a button to start it
-        /// </summary>
-        public bool immidiateStartServerBroadcast;
-        /// <summary>
         /// Set a desired port for the game
         /// </summary>
         public int desiredPort;
@@ -60,13 +50,14 @@ namespace NetworkMaker
         {
             get; set;
         }
-
+       
         public void Start()
         {
             if (_instance == null)
             {
                 _instance = this;
                 IsDoneCreating = false;
+                
                 DontDestroyOnLoad(this.gameObject);
             }
             else if(_instance != null)
@@ -74,45 +65,46 @@ namespace NetworkMaker
                 Destroy(this.gameObject);
                 return;
             }
-            if(isAServer)
-            {
-                //create an object that handles all server stuff
-                CreateAServerObject();
-            }
-            else if(!isAServer)
-            {
-                //create an object that handles all client stuff
-                CreateAClientObject();
-            }
+        }
+        public void OnStartAsAServer()
+        {
+            CreateAServerObject();
+        }
+        public void OnStartAsAClient()
+        {
+            CreateAClientObject();
         }
 
         #region VIRTUAL METHODS FOR SERVER/CLIENT CREATION
         protected virtual void CreateAServerObject()
         {
-            GameObject serverObject = new GameObject("SERVER_LobbyManager");
-            NMLobbyManager _lobbyManager = serverObject.AddComponent<NMLobbyManager>();
-            NMServerDiscovery _discovery = serverObject.AddComponent<NMServerDiscovery>();
-
-            AddEventsToServer(_lobbyManager);
-            InitValueOfLobbyManager(_lobbyManager);
-            _discovery.useNetworkManager = true;
-            _discovery.showGUI = false;
-            if(immidiateStartServerBroadcast)
+            //to stop it from creating new lobby manager.. lobby manager should have one instance
+            if (GameObject.Find("SERVER_LobbyManager") == null)
             {
+                GameObject serverObject = new GameObject("SERVER_LobbyManager");
+                NMLobbyManager _lobbyManager = serverObject.AddComponent<NMLobbyManager>();
+                NMServerDiscovery _discovery = serverObject.AddComponent<NMServerDiscovery>();
+
+                AddEventsToServer(_lobbyManager);
+                InitValueOfLobbyManager(_lobbyManager);
+                _discovery.useNetworkManager = true;
+                _discovery.showGUI = false;
                 _discovery.BroadcastOnStart = true;
             }
-            
             IsDoneCreating = true;
         }
         protected virtual void CreateAClientObject()
         {
-            GameObject clientObject = new GameObject("CLIENT_LobbyManager");
-            NMLobbyManager _lobbyManager = clientObject.AddComponent<NMLobbyManager>();
-            NMClientDiscovery _discovery = clientObject.AddComponent<NMClientDiscovery>();
-            AddEventsToClient(_lobbyManager);
-            InitValueOfLobbyManager(_lobbyManager);
-            _discovery.showGUI = false;
-
+            //to stop it from creating new lobby manager.. lobby manager should have one instance
+            if (GameObject.Find("CLIENT_LobbyManager") == null)
+            {
+                GameObject clientObject = new GameObject("CLIENT_LobbyManager");
+                NMLobbyManager _lobbyManager = clientObject.AddComponent<NMLobbyManager>();
+                NMClientDiscovery _discovery = clientObject.AddComponent<NMClientDiscovery>();
+                AddEventsToClient(_lobbyManager);
+                InitValueOfLobbyManager(_lobbyManager);
+                _discovery.showGUI = false;
+            }
             IsDoneCreating = true;
         }
 
@@ -124,13 +116,14 @@ namespace NetworkMaker
             lobbyManager.minPlayers = (minPlayers.Equals(0)) ? NMDefaultConstants.DEFAULT_MIN_PLAYERCOUNT : minPlayers;
             lobbyManager.lobbyScene = lobbySceneToUse;
             lobbyManager.playScene = gameSceneToUse;
+            lobbyManager.gamePlayerPrefab = playerClientPrefab;
 
-            lobbyManager.playerPrefab = playerClientPrefab;
-            
+            //lobbyManager.
+
             if(lobbyPrefab != null)
                 lobbyManager.lobbyPlayerPrefab = lobbyPrefab;
             
-            lobbyManager.autoCreatePlayer = false;
+            lobbyManager.autoCreatePlayer = true;
         }
         #endregion
         #region CALLBACKS
