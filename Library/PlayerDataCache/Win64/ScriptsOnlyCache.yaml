@@ -13,6 +13,9 @@ ScriptsOnlyBuild:
     - NetworkMaker.NMNetworkHandler
     - Player
     - SpawnEnemies
+    - UnityChan.AutoBlink
+    - UnityChan.FaceUpdate
+    - UnityChan.IdleChanger
     - Zombie
     - ZombieDetection
     - ZombieEater
@@ -99,23 +102,23 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 10372}
     - Class: 114
-      Script: {instanceID: 10638}
+      Script: {instanceID: 10528}
     - Class: 114
-      Script: {instanceID: 10700}
+      Script: {instanceID: 10640}
     - Class: 114
-      Script: {instanceID: 10800}
+      Script: {instanceID: 10702}
     - Class: 114
-      Script: {instanceID: 10882}
+      Script: {instanceID: 10802}
     - Class: 114
-      Script: {instanceID: 11250}
+      Script: {instanceID: 10884}
     - Class: 114
-      Script: {instanceID: 11324}
+      Script: {instanceID: 11252}
     - Class: 114
-      Script: {instanceID: 11736}
+      Script: {instanceID: 11326}
     - Class: 114
-      Script: {instanceID: 11788}
+      Script: {instanceID: 11738}
     - Class: 114
-      Script: {instanceID: 30376}
+      Script: {instanceID: 11790}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -204,21 +207,21 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 10372}
     - Class: 114
-      Script: {instanceID: 10548}
+      Script: {instanceID: 10550}
     - Class: 114
-      Script: {instanceID: 10638}
+      Script: {instanceID: 10640}
     - Class: 114
-      Script: {instanceID: 10914}
+      Script: {instanceID: 10916}
     - Class: 114
-      Script: {instanceID: 11250}
+      Script: {instanceID: 11252}
     - Class: 114
-      Script: {instanceID: 11314}
+      Script: {instanceID: 11316}
     - Class: 114
-      Script: {instanceID: 11324}
+      Script: {instanceID: 11326}
     - Class: 114
-      Script: {instanceID: 11724}
+      Script: {instanceID: 11726}
     - Class: 114
-      Script: {instanceID: 11736}
+      Script: {instanceID: 11738}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -542,6 +545,12 @@ ScriptsOnlyBuild:
     assemblyName: Assembly-CSharp.dll
     namespaceName: UnityChan
     className: CameraController
+  - hash:
+      serializedVersion: 2
+      Hash: e8113e8bc3e0dfd3c7f8dadbef15cfe8
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: MyNetworkLobbyPlayer
   - hash:
       serializedVersion: 2
       Hash: 85045a1c02a413b343339373cf8e5d0b
@@ -986,12 +995,6 @@ ScriptsOnlyBuild:
     assemblyName: Unity.Timeline.dll
     namespaceName: UnityEngine.Timeline
     className: PlayableTrack
-  - hash:
-      serializedVersion: 2
-      Hash: e8113e8bc3e0dfd3c7f8dadbef15cfe8
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: 
-    className: MyNetworkLobbyPlayer
   platform: 19
   scenePathNames:
   - Assets/ZombieMultiplayer/Scenes/scene_player_lobby.unity

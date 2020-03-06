@@ -3461,7 +3461,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &632814255
 Transform:
   m_ObjectHideFlags: 0
@@ -3488,11 +3488,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a53d633cb1300cf47a5489f22d14f927, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameUIController: {fileID: 806528629}
-  gameSpawner: {fileID: 460571127}
+  gameUIController: {fileID: 0}
+  gameSpawner: {fileID: 0}
   gameState: 0
-  gameOwner: 1
-  gameSeconds: 10
+  gameOwner: 0
+  gameSeconds: 0
 --- !u!114 &632814257
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3524,8 +3524,8 @@ MonoBehaviour:
     i13: 0
     i14: 0
     i15: 0
-  m_ServerOnly: 1
-  m_LocalPlayerAuthority: 0
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 1
 --- !u!1 &674251856
 GameObject:
   m_ObjectHideFlags: 0

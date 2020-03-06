@@ -35,19 +35,44 @@ public class GameController : NetworkBehaviour
     int gameSecondsHolder;
     private void Start()
     {
-        if (!isServer)
-            return;
+      /*
 
         if(gameSeconds <= 0)
         {
             Debug.LogError("Put seconds on the GameController object");
             return;
         }
+        */
     }
     private void Update()
     {
-        if (!isServer)
-            return;
+        
+        if(isLocalPlayer)
+        {
+            Debug.Log("locally mine");
+            if(isServer)
+            {
+                Debug.Log("and im a server");
+            }
+            else if(isClient)
+            {
+                Debug.Log("isClient is called");
+            }
+            else if(!isServer)
+            {
+                Debug.Log("not a server and !isServer is called not isClient");
+            }
+        }
+        /*
+        if (isClient)
+        {
+            if (isLocalPlayer)
+            {
+                Debug.Log("im a client and this is my copy of game controller");
+            }
+        }
+        */
+        /*
         
         if (gameSeconds <= 0)
         {
@@ -63,6 +88,7 @@ public class GameController : NetworkBehaviour
         {
             UpdateGameStates();
         }
+        */
     }
     private void UpdateGamesettings()
     {
