@@ -39,6 +39,7 @@ public class MyNetworkLobbyManager : NetworkLobbyManager
     public override void OnLobbyServerConnect(NetworkConnection conn)
     {
         base.OnLobbyClientConnect(conn);
+        Debug.Log("a client entered: " + conn.connectionId);
         if(!networkConnectionList.Contains(conn))
         {
             networkConnectionList.Add(conn);
@@ -47,6 +48,7 @@ public class MyNetworkLobbyManager : NetworkLobbyManager
     public override void OnLobbyServerDisconnect(NetworkConnection conn)
     {
         base.OnLobbyServerDisconnect(conn);
+        Debug.Log("a client disconnected:  " + conn.connectionId);
         if(networkConnectionList.Contains(conn))
         {
             networkConnectionList.Remove(conn);
@@ -57,12 +59,20 @@ public class MyNetworkLobbyManager : NetworkLobbyManager
     public override void OnLobbyClientEnter()
     {
         base.OnLobbyClientEnter();
+        Debug.Log("called OnLobbyClientEnter");
         
-        
+    }
+    public override void OnLobbyStartClient(NetworkClient lobbyClient)
+    {
+        base.OnLobbyStartClient(lobbyClient);
+        Debug.Log("called OnLobbyStartClient");
     }
     public override void OnLobbyClientExit()
     {
+        //usually when they enter the game itself player client exits
         base.OnLobbyClientExit();
+        Debug.Log("called OnLobbyClientExit");
+      
     }
     #endregion
     public override void OnLobbyServerPlayersReady()

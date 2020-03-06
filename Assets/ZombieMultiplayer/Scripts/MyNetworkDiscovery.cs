@@ -10,7 +10,6 @@ public class MyNetworkDiscovery : NetworkDiscovery
     /// </summary>
     public void StartServerBroadcast()
     {
-        base.StopBroadcast();
         base.Initialize();
         base.StartAsServer();
     }
