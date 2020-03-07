@@ -48,7 +48,10 @@ public class GameController : NetworkBehaviour
     {
         if (!isServer)
             return;
-        
+
+        if (isServer)
+            Debug.Log("im a server");    
+        /*
         if (gameSeconds <= 0)
         {
             Debug.LogError("Put seconds on the GameController object");
@@ -63,6 +66,7 @@ public class GameController : NetworkBehaviour
         {
             UpdateGameStates();
         }
+        */
     }
     private void UpdateGamesettings()
     {
