@@ -130,8 +130,8 @@ public class Player : CharacterBase
         myTransform.position = Vector3.Lerp(myTransform.position, myPlayerPosition,
             Time.deltaTime * smoothing);
 
-        myTransform.rotation = Quaternion.Lerp(myTransform.rotation, myRotation,
-            Time.deltaTime * smoothing);
+/*        myTransform.rotation = Quaternion.Lerp(myTransform.rotation, myRotation,
+            Time.deltaTime * smoothing);*/
     }
     void UpdatePlayerState()
     {
@@ -364,10 +364,10 @@ public class Player : CharacterBase
         switch (numAnim)
         {
             case 0:
-                RunAnimation();
+                IdleAnimation();
                 break;
             case 1:
-                IdleAnimation();
+                RunAnimation();
                 break;
             case 2:
                 IsAttackedAnimation();
@@ -389,10 +389,10 @@ public class Player : CharacterBase
         switch (numAnim)
         {
             case 0:
-                RunAnimation();
+                IdleAnimation();
                 break;
             case 1:
-                IdleAnimation();
+                RunAnimation();
                 break;
             case 2:
                 IsAttackedAnimation();
