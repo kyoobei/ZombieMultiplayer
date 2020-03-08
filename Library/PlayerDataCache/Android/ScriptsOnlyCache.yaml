@@ -2,28 +2,20 @@ ScriptsOnlyBuild:
   usedScripts:
     Assembly-CSharp.dll:
     - CameraHandler
+    - EnemySpawner
     - FloatingJoystick
     - GameController
-    - GameSpawner
     - GameUIController
     - LobbyUIManager
     - MyNetworkDiscovery
     - MyNetworkLobbyManager
+    - MyNetworkLobbyPlayer
     - NetworkMaker.NMNetworkHandler
+    - ObjectPool
     - Player
-    - SpawnEnemies
-    - UnityChan.AutoBlink
-    - UnityChan.FaceUpdate
-    - UnityChan.IdleChanger
     - Zombie
     - ZombieDetection
     - ZombieEater
-    UnityEditor.Graphs.dll:
-    - UnityEditor.Graphs.AnimationBlendTree.Graph
-    - UnityEditor.Graphs.AnimationBlendTree.GraphGUI
-    - UnityEditor.Graphs.AnimationStateMachine.Graph
-    - UnityEditor.Graphs.AnimationStateMachine.GraphGUI
-    - UnityEditor.Graphs.AnimatorControllerTool
     UnityEditor.TestRunner.dll:
     - UnityEditor.TestTools.TestRunner.Api.CallbacksHolder
     - UnityEditor.TestTools.TestRunner.TestListCacheData
@@ -41,7 +33,6 @@ ScriptsOnlyBuild:
     - UnityEngine.Networking.NetworkIdentity
     - UnityEngine.Networking.NetworkLobbyPlayer
     - UnityEngine.Networking.NetworkStartPosition
-    - UnityEngine.Networking.NetworkTransform
   sceneClasses:
     Assets/ZombieMultiplayer/Scenes/scene_player_lobby.unity:
     - Class: 1
@@ -93,29 +84,29 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 9938}
     - Class: 114
-      Script: {instanceID: 9980}
-    - Class: 114
       Script: {instanceID: 10052}
     - Class: 114
       Script: {instanceID: 10298}
     - Class: 114
-      Script: {instanceID: 10370}
+      Script: {instanceID: 10372}
     - Class: 114
-      Script: {instanceID: 10636}
+      Script: {instanceID: 10528}
     - Class: 114
-      Script: {instanceID: 10698}
+      Script: {instanceID: 10640}
     - Class: 114
-      Script: {instanceID: 10798}
+      Script: {instanceID: 10702}
     - Class: 114
-      Script: {instanceID: 11246}
+      Script: {instanceID: 10802}
     - Class: 114
-      Script: {instanceID: 11320}
+      Script: {instanceID: 10884}
     - Class: 114
-      Script: {instanceID: 11732}
+      Script: {instanceID: 11252}
     - Class: 114
-      Script: {instanceID: 109774}
+      Script: {instanceID: 11326}
     - Class: 114
-      Script: {instanceID: 109780}
+      Script: {instanceID: 11740}
+    - Class: 114
+      Script: {instanceID: 11792}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -186,39 +177,35 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 9820}
     - Class: 114
-      Script: {instanceID: 9836}
-    - Class: 114
       Script: {instanceID: 9890}
     - Class: 114
       Script: {instanceID: 9902}
     - Class: 114
       Script: {instanceID: 9938}
     - Class: 114
-      Script: {instanceID: 9980}
-    - Class: 114
-      Script: {instanceID: 10082}
-    - Class: 114
       Script: {instanceID: 10298}
     - Class: 114
-      Script: {instanceID: 10346}
+      Script: {instanceID: 10348}
     - Class: 114
-      Script: {instanceID: 10370}
+      Script: {instanceID: 10372}
     - Class: 114
-      Script: {instanceID: 10546}
+      Script: {instanceID: 10550}
     - Class: 114
-      Script: {instanceID: 10636}
+      Script: {instanceID: 10640}
     - Class: 114
-      Script: {instanceID: 10910}
+      Script: {instanceID: 10916}
     - Class: 114
-      Script: {instanceID: 11246}
+      Script: {instanceID: 11252}
     - Class: 114
-      Script: {instanceID: 11310}
+      Script: {instanceID: 11316}
     - Class: 114
-      Script: {instanceID: 11320}
+      Script: {instanceID: 11326}
     - Class: 114
-      Script: {instanceID: 11720}
+      Script: {instanceID: 11554}
     - Class: 114
-      Script: {instanceID: 11732}
+      Script: {instanceID: 11728}
+    - Class: 114
+      Script: {instanceID: 11740}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -226,8 +213,6 @@ ScriptsOnlyBuild:
     - Class: 135
       Script: {instanceID: 0}
     - Class: 137
-      Script: {instanceID: 0}
-    - Class: 143
       Script: {instanceID: 0}
     - Class: 157
       Script: {instanceID: 0}
@@ -304,7 +289,7 @@ ScriptsOnlyBuild:
     className: TMP_ScrollbarEventHandler
   - hash:
       serializedVersion: 2
-      Hash: b7a78bd76fc9dbb3024497e2efbe806a
+      Hash: efb6729603c6763b3dec52cb212c1fd6
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: Player
@@ -484,6 +469,12 @@ ScriptsOnlyBuild:
     className: CharacterBase
   - hash:
       serializedVersion: 2
+      Hash: 8d6c2bd18774d73bcb9dbb2274eb6d09
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: MyNetworkLobbyUI
+  - hash:
+      serializedVersion: 2
       Hash: 1d5e90fc9501ebfa8277eed8ce2f7425
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
@@ -536,6 +527,12 @@ ScriptsOnlyBuild:
     assemblyName: Assembly-CSharp.dll
     namespaceName: UnityChan
     className: CameraController
+  - hash:
+      serializedVersion: 2
+      Hash: e8113e8bc3e0dfd3c7f8dadbef15cfe8
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: MyNetworkLobbyPlayer
   - hash:
       serializedVersion: 2
       Hash: 85045a1c02a413b343339373cf8e5d0b
@@ -638,6 +635,12 @@ ScriptsOnlyBuild:
     assemblyName: Assembly-CSharp.dll
     namespaceName: UnityChan
     className: SplashScreen
+  - hash:
+      serializedVersion: 2
+      Hash: 828b6f7b2fff97c4fdb0bea192387a8d
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: MyNetworkLobbyManager
   - hash:
       serializedVersion: 2
       Hash: 5ad4aa237d47ac2bab17bacb672edf7a
@@ -754,7 +757,7 @@ ScriptsOnlyBuild:
     className: NetworkBehaviour
   - hash:
       serializedVersion: 2
-      Hash: 6d5516cee0349e5e31a5a870a065c6d6
+      Hash: eaf643748f721de639c22c03023cedef
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: Zombie
@@ -778,7 +781,7 @@ ScriptsOnlyBuild:
     className: AudioTrack
   - hash:
       serializedVersion: 2
-      Hash: 4d0da30cd48885c039bb18bffbf196c3
+      Hash: f8254317eb15ee1b47fae36a884f23f7
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: GameController
@@ -856,6 +859,12 @@ ScriptsOnlyBuild:
     className: NetworkAnimator
   - hash:
       serializedVersion: 2
+      Hash: 55822aa5d40dd838269b68089d3ca048
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: ObjectPool
+  - hash:
+      serializedVersion: 2
       Hash: df434544c9f7b33d1cc7e635b180d279
     assemblyName: Unity.TextMeshPro.dll
     namespaceName: TMPro
@@ -922,10 +931,10 @@ ScriptsOnlyBuild:
     className: Dropdown
   - hash:
       serializedVersion: 2
-      Hash: 389d305e29027a0b8831a532aa683ac1
+      Hash: 854890e1379016e1c0d7ed25b2e1afbd
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
-    className: GameSpawner
+    className: EnemySpawner
   - hash:
       serializedVersion: 2
       Hash: 9dac16f3efc511835ac976dfae55f580
@@ -958,6 +967,12 @@ ScriptsOnlyBuild:
     className: Slider
   - hash:
       serializedVersion: 2
+      Hash: 1dcb82730d983b77cec736c6ef19f814
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: MyNetworkDiscovery
+  - hash:
+      serializedVersion: 2
       Hash: 0fd6822f6177297bd0eb4d83cc7a9030
     assemblyName: UnityEngine.UI.dll
     namespaceName: UnityEngine.UI
@@ -968,26 +983,8 @@ ScriptsOnlyBuild:
     assemblyName: Unity.Timeline.dll
     namespaceName: UnityEngine.Timeline
     className: PlayableTrack
-  - hash:
-      serializedVersion: 2
-      Hash: 3f8277192c640e9b6c7ee692a9d4f409
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: 
-    className: MyNetworkLobbyManager
-  - hash:
-      serializedVersion: 2
-      Hash: 1dcb82730d983b77cec736c6ef19f814
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: 
-    className: MyNetworkDiscovery
-  - hash:
-      serializedVersion: 2
-      Hash: 8d6c2bd18774d73bcb9dbb2274eb6d09
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: 
-    className: MyNetworkLobbyUI
   platform: 13
   scenePathNames:
   - Assets/ZombieMultiplayer/Scenes/scene_player_lobby.unity
   - Assets/ZombieMultiplayer/Scenes/scene_player_mainGame.unity
-  playerPath: C:/Users/AGMartinez/Desktop/UnityBuilds/test1.apk
+  playerPath: C:/Users/angel/Desktop/Unity/testermulti.apk

@@ -10,15 +10,21 @@ ScriptsOnlyBuild:
     - MyNetworkDiscovery
     - MyNetworkLobbyManager
     - MyNetworkLobbyPlayer
+    - MyNetworkLobbyUI
     - NetworkMaker.NMNetworkHandler
     - ObjectPool
     - Player
-    - UnityChan.AutoBlink
-    - UnityChan.FaceUpdate
-    - UnityChan.IdleChanger
     - Zombie
     - ZombieDetection
     - ZombieEater
+    UnityEditor.Graphs.dll:
+    - UnityEditor.Graphs.AnimationBlendTree.Graph
+    - UnityEditor.Graphs.AnimationBlendTree.GraphGUI
+    - UnityEditor.Graphs.AnimationStateMachine.AnyStateNode
+    - UnityEditor.Graphs.AnimationStateMachine.Graph
+    - UnityEditor.Graphs.AnimationStateMachine.GraphGUI
+    - UnityEditor.Graphs.AnimationStateMachine.StateNode
+    - UnityEditor.Graphs.AnimatorControllerTool
     UnityEditor.TestRunner.dll:
     - UnityEditor.TestTools.TestRunner.Api.CallbacksHolder
     - UnityEditor.TestTools.TestRunner.TestListCacheData
@@ -91,6 +97,8 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 10298}
     - Class: 114
+      Script: {instanceID: 10344}
+    - Class: 114
       Script: {instanceID: 10372}
     - Class: 114
       Script: {instanceID: 10528}
@@ -107,9 +115,9 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 11326}
     - Class: 114
-      Script: {instanceID: 11738}
+      Script: {instanceID: 11740}
     - Class: 114
-      Script: {instanceID: 11790}
+      Script: {instanceID: 11792}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -204,11 +212,11 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 11326}
     - Class: 114
-      Script: {instanceID: 11726}
+      Script: {instanceID: 11554}
     - Class: 114
-      Script: {instanceID: 11738}
+      Script: {instanceID: 11728}
     - Class: 114
-      Script: {instanceID: 39806}
+      Script: {instanceID: 11740}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -292,7 +300,7 @@ ScriptsOnlyBuild:
     className: TMP_ScrollbarEventHandler
   - hash:
       serializedVersion: 2
-      Hash: 150a32ff7f91cf2e4e428a3f6da523e4
+      Hash: efb6729603c6763b3dec52cb212c1fd6
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: Player
@@ -862,6 +870,12 @@ ScriptsOnlyBuild:
     className: NetworkAnimator
   - hash:
       serializedVersion: 2
+      Hash: 55822aa5d40dd838269b68089d3ca048
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: ObjectPool
+  - hash:
+      serializedVersion: 2
       Hash: df434544c9f7b33d1cc7e635b180d279
     assemblyName: Unity.TextMeshPro.dll
     namespaceName: TMPro
@@ -980,12 +994,6 @@ ScriptsOnlyBuild:
     assemblyName: Unity.Timeline.dll
     namespaceName: UnityEngine.Timeline
     className: PlayableTrack
-  - hash:
-      serializedVersion: 2
-      Hash: 55822aa5d40dd838269b68089d3ca048
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: 
-    className: ObjectPool
   platform: 19
   scenePathNames:
   - Assets/ZombieMultiplayer/Scenes/scene_player_lobby.unity

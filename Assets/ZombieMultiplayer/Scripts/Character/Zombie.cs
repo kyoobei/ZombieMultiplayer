@@ -34,6 +34,9 @@ public class Zombie : CharacterBase
     Quaternion myRotation;
     Transform myTransform;
 
+    [SyncVar]
+    int animType;
+
     private void Awake()
     {
         zombieAgent = GetComponent<NavMeshAgent>();
@@ -43,6 +46,7 @@ public class Zombie : CharacterBase
         //add logic here that on client side i wont initialize anything
         //turn off zombie detection and zombie eater to avoid unnecesarry computations
         myTransform = transform;
+
 
         if (!isServer)
             return;
@@ -61,8 +65,29 @@ public class Zombie : CharacterBase
     }
     private void Update()
     {
-        if(gameObject.activeInHierarchy)
+        if (gameObject.activeInHierarchy)
+        {
             LerpPosition();
+            if (animType.Equals(0))
+            {
+                //idle
+                zombieAIAnimator.SetFloat("movement", 0.0f);
+            }
+            if (animType.Equals(1))
+            {
+                //walk
+                zombieAIAnimator.SetFloat("movement", 0.2f);
+            }
+            if (animType.Equals(2))
+            {
+                //biting
+                zombieAIAnimator.SetBool("isAttacking", true);
+            }
+            if(animType.Equals(3))
+            {
+                zombieAIAnimator.SetBool("isAttacking", false);
+            }
+        }
         //add logic here that on client side i wont initialize anything
         if (!isServer)
             return;
@@ -114,6 +139,7 @@ public class Zombie : CharacterBase
                 }
                 else if(!zombieDetection.hasDetectedAPlayer)
                 {
+                    animType = 0;
                     zombieAgent.isStopped = true;
                     if(m_currentWaitTime < maxWaitTime)
                     {
@@ -147,6 +173,7 @@ public class Zombie : CharacterBase
                 if(!isEating)
                 {
                     zombieAgent.isStopped = false;
+                    animType = 1; 
                     zombieAgent.SetDestination(targetObject.transform.position);
                 }
                 else
@@ -220,6 +247,7 @@ public class Zombie : CharacterBase
                         }
                     }
                     m_targetPatrolPosition = listOfPatrolPoints[randomIndex].transform.position;
+                    animType = 1;
                     zombieAgent.SetDestination(m_targetPatrolPosition);
                     m_isPatrolPosAcquired = true;
                 }
@@ -232,6 +260,7 @@ public class Zombie : CharacterBase
                         if (currentZombieBehavior.Equals(ZombieAIBehaviour.STATIONARY))
                         {
                             m_currentWaitTime = 0;
+                            animType = 0;
                             characterState = CharacterState.IDLE;
                         }
                         
@@ -252,6 +281,7 @@ public class Zombie : CharacterBase
         {
             //the player has been eaten already or possible disconnection
             //get back to random state that the zombie want to do
+            animType = 3;
             targetObject = null;
             currentZombieBehavior = GetRandomBehaviour();
             if (currentZombieBehavior.Equals(ZombieAIBehaviour.STATIONARY)) 
@@ -269,6 +299,7 @@ public class Zombie : CharacterBase
         }
         else if(isEating)
         {
+            animType = 2;
             // to look at whatever player it is
             Vector3 newTargetPostion = new Vector3
                 (

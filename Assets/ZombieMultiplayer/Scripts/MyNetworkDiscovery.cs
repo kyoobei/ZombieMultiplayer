@@ -11,6 +11,10 @@ public class MyNetworkDiscovery : NetworkDiscovery
     public void StartServerBroadcast()
     {
         base.Initialize();
+
+        if (running)
+            base.StopBroadcast();
+
         base.StartAsServer();
     }
     /// <summary>
@@ -19,6 +23,10 @@ public class MyNetworkDiscovery : NetworkDiscovery
     public void StartClientListen()
     {
         base.Initialize();
+
+        if (running)
+            base.StopBroadcast();
+
         base.StartAsClient();
     }
     public override void OnReceivedBroadcast(string fromAddress, string data)

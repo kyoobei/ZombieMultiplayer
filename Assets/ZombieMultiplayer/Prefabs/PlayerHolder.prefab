@@ -1,5 +1,64 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3316937121886696427
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8682932970174425005}
+  - component: {fileID: 5811021347963045748}
+  - component: {fileID: 4375416586963331393}
+  m_Layer: 10
+  m_Name: Eater
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &8682932970174425005
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3316937121886696427}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 2.54, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 5512538022255702321}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!135 &5811021347963045748
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3316937121886696427}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 2
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &4375416586963331393
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3316937121886696427}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5e63d01c4613134babfb2bc15624e89, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetEaten: {fileID: 0}
+  isEating: 0
 --- !u!95 &5512538021847626263
 Animator:
   serializedVersion: 3
@@ -48,7 +107,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 5512538022255702321}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
 --- !u!108 &5512538021877721900
 Light:
@@ -233,6 +292,7 @@ Transform:
   m_Children:
   - {fileID: 5512538021808925823}
   - {fileID: 5512538022169872648}
+  - {fileID: 8682932970174425005}
   - {fileID: 7016755278431686656}
   - {fileID: 5512538021877721811}
   - {fileID: 5512538022305093235}
@@ -288,12 +348,14 @@ MonoBehaviour:
   rotateSpeed: 4
   characterState: 0
   playerCamera: {fileID: 5512538022305093234}
-  pState: 0
+  prevPState: 0
+  currPState: 0
   transformTimer: 5
   humanModel: {fileID: 5512538021809287583}
   humanLight: {fileID: 5512538022169872655}
   monsterModel: {fileID: 6285860040827101715}
   monsterLight: {fileID: 5512538021877721810}
+  zombieEater: {fileID: 4375416586963331393}
   playerJoystick: {fileID: 0}
   positionUpdateRate: 0.2
   smoothing: 4
@@ -345,7 +407,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 5512538022255702321}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 27.043001, y: 0, z: 0}
 --- !u!20 &5512538022305093234
 Camera:
@@ -472,7 +534,7 @@ PrefabInstance:
     - target: {fileID: 3305920991726709325, guid: d58be77cba3adf54cb14b15052b86514,
         type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 3305920991726709325, guid: d58be77cba3adf54cb14b15052b86514,
         type: 3}
@@ -504,8 +566,7 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 2.4
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 7537417665459280382, guid: d58be77cba3adf54cb14b15052b86514, type: 3}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d58be77cba3adf54cb14b15052b86514, type: 3}
 --- !u!1 &6285860040827101715 stripped
 GameObject:
@@ -594,7 +655,6 @@ PrefabInstance:
     - {fileID: 11400002, guid: 412b92d4feeb9c548bfa98f62c4d1022, type: 3}
     - {fileID: 11400000, guid: 412b92d4feeb9c548bfa98f62c4d1022, type: 3}
     - {fileID: 11400004, guid: 412b92d4feeb9c548bfa98f62c4d1022, type: 3}
-    - {fileID: 9500000, guid: 412b92d4feeb9c548bfa98f62c4d1022, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 412b92d4feeb9c548bfa98f62c4d1022, type: 3}
 --- !u!1 &5512538021809287583 stripped
 GameObject:

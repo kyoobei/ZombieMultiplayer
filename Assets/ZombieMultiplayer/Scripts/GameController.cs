@@ -97,7 +97,7 @@ public class GameController : NetworkBehaviour
                 gameUIController.ActivateServerUI();
                 enemySpawner.InitializeEnemySpawn();
                 //spawn a specific number of enemy at the start of the game
-                enemySpawner.SummonEnemiesAtRandomPoint(2);
+                enemySpawner.SummonEnemiesAtRandomPoint(1);
 
                 StartCoroutine(StartCountdownOnServer());
                 gameState = GameState.GameStart;

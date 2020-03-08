@@ -17,9 +17,11 @@ public class MyNetworkLobbyManager : NetworkLobbyManager
     {
         //for mobile devices to not sleep
         Screen.sleepTimeout = SleepTimeout.NeverSleep;
+        StopServer();
 
         startAsServerButton.onClick.AddListener(StartHosting);
         startAsClientButton.onClick.AddListener(StartClientListen);
+
     }
     private void Update()
     {
@@ -27,6 +29,7 @@ public class MyNetworkLobbyManager : NetworkLobbyManager
     }
     public void StartHosting()
     {
+        NetworkServer.Reset();
         StartServer();
         serverNetworkDiscovery.StartServerBroadcast();
     }

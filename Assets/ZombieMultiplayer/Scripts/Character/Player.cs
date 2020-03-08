@@ -6,6 +6,7 @@ public class Player : CharacterBase
 {
     const string TAG_PLAYER = "Player";
     const string TAG_ZOMBIE = "Zombie";
+    const string TAG_TURNED = "BeingTurned";
 
     CharacterController m_charController;
     Animator m_animatorToUse;
@@ -27,6 +28,7 @@ public class Player : CharacterBase
     [Header("Monster")]
     [SerializeField] GameObject monsterModel;
     [SerializeField] GameObject monsterLight;
+    [SerializeField] ZombieEater zombieEater;
 
     GameUIController gameUIController;
     public Joystick playerJoystick;
@@ -35,6 +37,7 @@ public class Player : CharacterBase
     float horizontalVal;
     bool isBeingTurned;
     bool isTransforming;
+    bool isEating;
 
     public float positionUpdateRate = 0.2f;
     public float smoothing = 15f;
@@ -42,6 +45,11 @@ public class Player : CharacterBase
     Vector3 myPlayerPosition;
     Quaternion myRotation;
     Transform myTransform;
+
+    int currentAnimationStateToUse;
+    bool hasChangedVal;
+    [SyncVar]
+    int animationStateToUse;
 
     [SyncVar]
     string currentTag;
@@ -56,6 +64,7 @@ public class Player : CharacterBase
         currentTag = TAG_PLAYER;
         prevPState = PlayerStateEnum.None;
         currPState = PlayerStateEnum.IsHuman;
+        animationStateToUse = 1;
 
         if (isLocalPlayer)
         {
@@ -88,6 +97,29 @@ public class Player : CharacterBase
             horizontalVal = 0f;
             verticalVal = 0f;
         }
+
+        if(currPState.Equals(PlayerStateEnum.IsMonster))
+        {
+            if(zombieEater.isEating)
+            {
+                if(!isEating)
+                {
+                    Player otherPlayer = zombieEater.targetEaten.GetComponent<Player>();
+                    otherPlayer.OnEatenByHuman();
+                    isEating = true;
+                    CmdSendAnimationState(3);
+                }
+            }
+            else
+            {
+                if (isEating)
+                {
+                    CmdSendAnimationState(4);
+                    isEating = false;
+                }
+            }
+        }
+
         UpdateCharacterState();
     }
     void LerpPosition()
@@ -103,36 +135,37 @@ public class Player : CharacterBase
     }
     void UpdatePlayerState()
     {
-        if(prevPState != currPState)
+        if (prevPState != currPState)
         {
-            switch(currPState)
+            switch (currPState)
             {
                 case PlayerStateEnum.None:
-                    ResetEverything(); 
-                    break; 
+                    gameObject.layer = LayerMask.NameToLayer("Player");
+                    ResetEverything();
+                    break;
                 case PlayerStateEnum.IsHuman:
+                    gameObject.layer = LayerMask.NameToLayer("Player");
                     currentTag = TAG_PLAYER;
                     LoadHumanModel();
                     break;
                 case PlayerStateEnum.IsBeingTurned:
                     //nothing but perform animation of player being turned
-                    currentTag = TAG_ZOMBIE;
+                    gameObject.layer = LayerMask.NameToLayer("Enemy");
+                    currentTag = TAG_TURNED;
                     isBeingTurned = true;
                     break;
                 case PlayerStateEnum.IsMonster:
+                    gameObject.layer = LayerMask.NameToLayer("Enemy");
                     currentTag = TAG_ZOMBIE;
                     LoadMonsterModel();
-                    break; 
+                    break;
             }
             //set it equals to that
             prevPState = currPState;
 
-            CmdSendPlayerState((int)currPState);
+            if (!isServer)
+                CmdSendPlayerState((int)currPState);
         }
-    }
-    void UpdateAnimationState()
-    {
-        
     }
     IEnumerator UpdatePositionOverTheNetwork()
     {
@@ -158,9 +191,10 @@ public class Player : CharacterBase
         RpcRecievePlayerState(playerState);
     }
     [Command]
-    private void CmdSendAnimationState(int charState)
+    private void CmdSendAnimationState(int animState)
     {
-        //send animation state
+        animationStateToUse = animState;
+        RpcRecieveAnimationState(animState); 
     }
     #endregion
     #region RECIEVED FROM SERVER (PASSED TO ALL CLIENTS OF THIS TYPE)
@@ -177,13 +211,12 @@ public class Player : CharacterBase
         currPState = (PlayerStateEnum)playerState;
     }
     [ClientRpc]
-    private void RpcRecieveAnimationState(int characterState)
+    private void RpcRecieveAnimationState(int animState)
     {
         //recieved animation
-
+        animationStateToUse = animState;
     }
     #endregion
-
     private void UpdatePlayerInputs()
     {
         horizontalVal = playerJoystick.Horizontal;//Input.GetAxis("Horizontal");
@@ -207,6 +240,7 @@ public class Player : CharacterBase
     {
         monsterModel.SetActive(false);
         monsterLight.SetActive(false);
+        zombieEater.gameObject.SetActive(false);
 
         humanModel.SetActive(true);
         humanLight.SetActive(true);
@@ -219,9 +253,15 @@ public class Player : CharacterBase
 
         //monster light needs to be deactivated if not local player
         if (isLocalPlayer)
+        {
+            zombieEater.gameObject.SetActive(true);
             monsterLight.SetActive(true);
+        }
         else
+        {
+            zombieEater.gameObject.SetActive(false);
             monsterLight.SetActive(false);
+        }
 
         monsterModel.SetActive(true);
         m_animatorToUse = monsterModel.GetComponent<Animator>();
@@ -233,31 +273,49 @@ public class Player : CharacterBase
         base.IdleState();
         float resultVal = Mathf.Abs(horizontalVal + verticalVal);
         resultVal = Mathf.Clamp01(resultVal);
+        if (!hasChangedVal)
+        {
+            hasChangedVal = true; 
+            CmdRunAnimationOnServer(0);
+        }
         if (resultVal > 0.2f)
         {
+            CmdSendAnimationState(2);
+            hasChangedVal = false;
             characterState = CharacterState.MOVING;
         }
 
         if (isBeingTurned)
         {
             //currPState = PlayerStateEnum.IsBeingTurned;
+            hasChangedVal = false;
             characterState = CharacterState.SPECIALACTION;
             isBeingTurned = false;
         }
+
+       
     }
     protected override void MovingState()
     {
         base.MovingState();
         float resultVal = Mathf.Abs(horizontalVal + verticalVal);
         resultVal = Mathf.Clamp01(resultVal);
-        
+        if (!hasChangedVal)
+        {
+            hasChangedVal = true;
+            CmdRunAnimationOnServer(1);
+        } 
         if (resultVal <= 0.2f)
         {
+            CmdSendAnimationState(2);
+            hasChangedVal = false;
             characterState = CharacterState.IDLE;
         }
 
         if(isBeingTurned)
         {
+            CmdSendAnimationState(3);
+            hasChangedVal = false;
             characterState = CharacterState.SPECIALACTION;
             isBeingTurned = false;
         }
@@ -268,6 +326,7 @@ public class Player : CharacterBase
         currPState = PlayerStateEnum.IsBeingTurned;
         if(!isTransforming)
         {
+            CmdRunAnimationOnServer(2);
             StartCoroutine(StartTransformingToZombie());
             isTransforming = true;
         }
@@ -297,6 +356,75 @@ public class Player : CharacterBase
     {
         CmdSendPlayerState((int)PlayerStateEnum.IsBeingTurned);
     }
+    #region ANIMATIONS
+    
+    [Command]
+    void CmdRunAnimationOnServer(int numAnim)
+    {
+        switch (numAnim)
+        {
+            case 0:
+                RunAnimation();
+                break;
+            case 1:
+                IdleAnimation();
+                break;
+            case 2:
+                IsAttackedAnimation();
+                break;
+            case 3:
+                if (currPState.Equals(PlayerStateEnum.IsMonster))
+                    AttackingAnimation(true);
+                break;
+            case 4:
+                if (currPState.Equals(PlayerStateEnum.IsMonster))
+                    AttackingAnimation(false);
+                break;
+        }
+        RpcRunAnimationOnOtherClients(numAnim);
+    }
+    [ClientRpc]
+    void RpcRunAnimationOnOtherClients(int numAnim)
+    {
+        switch (numAnim)
+        {
+            case 0:
+                RunAnimation();
+                break;
+            case 1:
+                IdleAnimation();
+                break;
+            case 2:
+                IsAttackedAnimation();
+                break;
+            case 3:
+                if (currPState.Equals(PlayerStateEnum.IsMonster))
+                    AttackingAnimation(true);
+                break;
+            case 4:
+                if (currPState.Equals(PlayerStateEnum.IsMonster))
+                    AttackingAnimation(false);
+                break;
+        }
+    }
+    void RunAnimation()
+    {
+        m_animatorToUse.SetFloat("movement", 0.2f);
+    }
+    void IdleAnimation()
+    {
+        m_animatorToUse.SetFloat("movement", 0.0f);
+    }
+    void IsAttackedAnimation()
+    {
+        m_animatorToUse.SetTrigger("isAttacked"); 
+    }
+    void AttackingAnimation(bool isAttacking)
+    {
+        m_animatorToUse.SetBool("isAttacking", isAttacking);
+    }
+    
+    #endregion
     //in case a reset is needed
     public void ResetEverything()
     {

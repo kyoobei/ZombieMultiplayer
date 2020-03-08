@@ -133,7 +133,7 @@ GameObject:
   - component: {fileID: -6853063555145818532}
   - component: {fileID: 1713461452}
   - component: {fileID: 1714999096}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: ZombieHolder
   m_TagString: Zombie
   m_Icon: {fileID: 0}
@@ -223,7 +223,7 @@ MonoBehaviour:
   characterState: 0
   zombieDetectionHolder: {fileID: 1579160232}
   zombieEaterHolder: {fileID: 29707354}
-  zombieAIAnimator: {fileID: 0}
+  zombieAIAnimator: {fileID: 829881422555136776}
   smoothing: 4
   positionUpdateRate: 0.2
   listOfPatrolPoints: []
@@ -344,6 +344,12 @@ PrefabInstance:
 --- !u!4 &5692233334391615675 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3305920991726709325, guid: d58be77cba3adf54cb14b15052b86514,
+    type: 3}
+  m_PrefabInstance: {fileID: 7142178697794820854}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &829881422555136776 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 7537417665459280382, guid: d58be77cba3adf54cb14b15052b86514,
     type: 3}
   m_PrefabInstance: {fileID: 7142178697794820854}
   m_PrefabAsset: {fileID: 0}
