@@ -73,6 +73,8 @@ namespace NetworkMaker
                 networkAddress = IPAddressRecieved;
                 networkPort = portRecieved;
                 hasRecievedABroadcast = true;
+                Debug.Log("Recieved this: " + networkAddress.ToString() + 
+                    " port: " + networkPort.ToString());
             }
         }
         public void InitiateServerStart()

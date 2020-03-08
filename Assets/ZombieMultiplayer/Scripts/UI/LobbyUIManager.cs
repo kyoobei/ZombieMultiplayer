@@ -8,16 +8,20 @@ public class LobbyUIManager : MonoBehaviour
     [Header("LOBBY PANELS")]
     [SerializeField] GameObject serverPanel;
     [SerializeField] GameObject clientPanel;
+    [SerializeField] GameObject selectionPanel;
 
     [Header("SERVER UI")]
     [SerializeField] Text numberOfConnectedClients;
+    [SerializeField] Button startAsServerButton;
     [SerializeField] Button startServerBtn;
     [SerializeField] Button startGameBtn;
 
     [Header("CLIENT UI")]
+    [SerializeField] Button startAsClientButton;
     [SerializeField] Text clientStatus;
 
     bool initialized;
+    bool addEventToButtonSelection;
 
     void Start()
     { 
@@ -31,20 +35,42 @@ public class LobbyUIManager : MonoBehaviour
     void Init()
     {
         if (!NMNetworkHandler.Instance.IsDoneCreating)
-            return;
-
-        if (!initialized)
         {
-            if (NMNetworkHandler.Instance.isAServer)
-                serverPanel.SetActive(true);
-            else if (!NMNetworkHandler.Instance.isAServer)
+            if(!addEventToButtonSelection)
             {
-                OnStartupOfClient();
-                clientPanel.SetActive(true);
+                startAsClientButton.onClick.AddListener
+                    (
+                        NMNetworkHandler.Instance.OnStartAsAClient
+                    );
+                startAsServerButton.onClick.AddListener
+                    (
+                        NMNetworkHandler.Instance.OnStartAsAServer
+                    );
+                addEventToButtonSelection = true;
             }
-
-            initialized = true;
+            //it means nm hasn't initialize in creating a lobby
         }
+        else
+        {
+            /*
+            if (!initialized)
+            {
+
+                /*
+                if (NMNetworkHandler.Instance.isAServer)
+                    serverPanel.SetActive(true);
+                else if (!NMNetworkHandler.Instance.isAServer)
+                {
+                    OnStartupOfClient();
+                    clientPanel.SetActive(true);
+                }
+                
+                initialized = true;
+            }
+            */
+        }
+
+        
     }
     public void OnButtonPressedServerStart()
     {
@@ -53,9 +79,20 @@ public class LobbyUIManager : MonoBehaviour
             return;
 
         NMNetworkHandler.Instance.StartBroadcastingServer();
-        NMNetworkHandler.Instance.InitiateStartServer();
+        
     }
-    void OnStartupOfClient()
+    /// <summary>
+    /// Start networkdiscovery broadcast
+    /// </summary>
+    void OnServerStartBroadcast()
+    {
+        NMNetworkHandler.Instance.InitiateStartServer();
+        NMNetworkHandler.Instance.StartBroadcastingServer();
+    }
+    /// <summary>
+    /// Start networkdiscovery listen
+    /// </summary>
+    void OnClientStartListen()
     {
         NMNetworkHandler.Instance.InitiateStartClient();
     }

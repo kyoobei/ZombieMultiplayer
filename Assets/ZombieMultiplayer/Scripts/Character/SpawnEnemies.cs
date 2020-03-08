@@ -1,13 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public class SpawnEnemies : MonoBehaviour
+using UnityEngine.Networking;
+public class SpawnEnemies : NetworkBehaviour
 {
     [SerializeField] GameObject zombiePrefab;
     public int numberOfZombieCopy;
     List<GameObject> spawnedZombiesList = new List<GameObject>();
     Queue<GameObject> zombieQueue = new Queue<GameObject>();
+    NetworkHash128 assetID { get; set; }
 
     private void Start()
     {

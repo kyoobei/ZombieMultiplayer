@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Networking;
 public class Zombie : CharacterBase
 {
     [SerializeField] GameObject zombieDetectionHolder;
     [SerializeField] GameObject zombieEaterHolder;
     [SerializeField] Animator zombieAIAnimator;
+    [SerializeField] float smoothing = 4f;
+    [SerializeField] float positionUpdateRate = 0.2f;
 
     public List<GameObject> listOfPatrolPoints = new List<GameObject>();
     List<int> patrolledIndexesList = new List<int>();
@@ -26,6 +29,11 @@ public class Zombie : CharacterBase
     float m_currentWaitTime;
     Vector3 m_targetPatrolPosition;
     bool m_isPatrolPosAcquired;
+
+    Vector3 myPosition;
+    Quaternion myRotation;
+    Transform myTransform;
+
     private void Awake()
     {
         zombieAgent = GetComponent<NavMeshAgent>();
@@ -34,6 +42,8 @@ public class Zombie : CharacterBase
     {
         //add logic here that on client side i wont initialize anything
         //turn off zombie detection and zombie eater to avoid unnecesarry computations
+        myTransform = transform;
+
         if (!isServer)
             return;
 
@@ -45,10 +55,14 @@ public class Zombie : CharacterBase
         //disabled for now to force patrolling state
         currentZombieBehavior = GetRandomBehaviour();
 
+        StartCoroutine(UpdatePositionOverTheNetwork());
+
         patrolledIndexesList.Clear();
     }
     private void Update()
     {
+        if(gameObject.activeInHierarchy)
+            LerpPosition();
         //add logic here that on client side i wont initialize anything
         if (!isServer)
             return;
@@ -57,6 +71,31 @@ public class Zombie : CharacterBase
         {
             UpdateCharacterState();
         }
+    }
+    void LerpPosition()
+    {
+        if (isServer)
+            return;
+
+        myTransform.position = Vector3.Lerp(myTransform.position, myPosition,
+            Time.deltaTime * smoothing);
+
+        myTransform.rotation = Quaternion.Lerp(myTransform.rotation,
+            myRotation, Time.deltaTime * smoothing);
+    }
+    IEnumerator UpdatePositionOverTheNetwork()
+    {
+        while(enabled)
+        {
+            RpcSendPositionToClients(myTransform.position, myTransform.rotation);
+            yield return new WaitForSeconds(positionUpdateRate);
+        }
+    }
+    [ClientRpc]
+    void RpcSendPositionToClients(Vector3 position, Quaternion rot)
+    {
+        myPosition = position;
+        myRotation = rot;
     }
     #region OVERRIDES
     protected override void IdleState()
@@ -115,7 +154,7 @@ public class Zombie : CharacterBase
                     zombieAgent.isStopped = true;
                     //perform animation here
                     Player tPlayer = targetObject.GetComponent<Player>();
-                    tPlayer.OnEaten();
+                    tPlayer.OnEatenByAI();
                     characterState = CharacterState.SPECIALACTION;
                 }
 

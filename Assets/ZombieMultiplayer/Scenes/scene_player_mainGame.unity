@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 0.6
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.35041693, g: 0.3906967, b: 0.45406985, a: 0.6}
+  m_IndirectSpecularColor: {r: 0.2910417, g: 0.29720116, b: 0.27940828, a: 0.6}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2675,7 +2675,7 @@ GameObject:
   - component: {fileID: 460571128}
   - component: {fileID: 460571127}
   m_Layer: 0
-  m_Name: GameSpawner
+  m_Name: EnemySpawner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2693,7 +2693,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &460571127
 MonoBehaviour:
@@ -2707,11 +2707,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8dff163fa60ddbe42a8e2f08f0b9ea08, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemyPool: {fileID: 1663682601}
+  enemyCountLimit: 10
   enemySpawnLocationHolder: {fileID: 1730635361}
-  playerSpawnLocationHolder: {fileID: 345828843}
-  playerHolderPrefab: {fileID: 5512538022255702320, guid: 9385bb440b5c5b7428988517c338744c,
-    type: 3}
-  spawnEnemies: {fileID: 1663682601}
 --- !u!114 &460571128
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3117,7 +3115,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!108 &533702264
 Light:
   m_ObjectHideFlags: 0
@@ -3190,7 +3188,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
 --- !u!1 &588848358
 GameObject:
@@ -3474,7 +3472,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &632814256
 MonoBehaviour:
@@ -3489,10 +3487,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameUIController: {fileID: 806528629}
-  gameSpawner: {fileID: 460571127}
+  enemySpawner: {fileID: 460571127}
   gameState: 0
-  gameOwner: 1
-  gameSeconds: 10
+  gameOwner: 0
+  gameSeconds: 300
 --- !u!114 &632814257
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3524,7 +3522,7 @@ MonoBehaviour:
     i13: 0
     i14: 0
     i15: 0
-  m_ServerOnly: 1
+  m_ServerOnly: 0
   m_LocalPlayerAuthority: 0
 --- !u!1 &674251856
 GameObject:
@@ -4767,7 +4765,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &806528629
 MonoBehaviour:
@@ -6709,6 +6707,37 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5b652e6d2e4453543806102c29bb6441, type: 3}
+--- !u!1 &1074997379
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1074997380}
+  m_Layer: 0
+  m_Name: ObjectPool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1074997380
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1074997379}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 1663682600}
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1076174882
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11554,9 +11583,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1663682600}
+  - component: {fileID: 1663682602}
   - component: {fileID: 1663682601}
   m_Layer: 0
-  m_Name: SpawnEnemies
+  m_Name: Enemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11569,12 +11599,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1663682599}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_Father: {fileID: 1074997380}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1663682601
 MonoBehaviour:
@@ -11585,12 +11615,45 @@ MonoBehaviour:
   m_GameObject: {fileID: 1663682599}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bc2d80d263507fb4fb603bedf9276f40, type: 3}
+  m_Script: {fileID: 11500000, guid: 51e1d5fd2446e8a4e9cd3328a8ff2ad9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  zombiePrefab: {fileID: 7142178697879948998, guid: ad255c7e01a80a742bed2832beca7421,
+  numberOfObjectClone: 20
+  clonePrefab: {fileID: 7142178697879948998, guid: ad255c7e01a80a742bed2832beca7421,
     type: 3}
-  numberOfZombieCopy: 10
+--- !u!114 &1663682602
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1663682599}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8258ea15b8f74c4889ce485d21cbbb1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 0
+    i1: 0
+    i2: 0
+    i3: 0
+    i4: 0
+    i5: 0
+    i6: 0
+    i7: 0
+    i8: 0
+    i9: 0
+    i10: 0
+    i11: 0
+    i12: 0
+    i13: 0
+    i14: 0
+    i15: 0
+  m_ServerOnly: 1
+  m_LocalPlayerAuthority: 0
 --- !u!1 &1679124726
 GameObject:
   m_ObjectHideFlags: 0
@@ -13165,7 +13228,7 @@ Transform:
   - {fileID: 1730635362}
   - {fileID: 345828844}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1913109051
 GameObject:

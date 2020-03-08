@@ -24,34 +24,42 @@ public class GameController : NetworkBehaviour
         None,                   //not yet set who is the owner of the game
         Server,                 //server owns the game 
         Client,                 //client or the player itself owns the game
-        Test                    //client still owns the game but should release enemy (singleplayer mode)
     };
     [SerializeField] GameUIController gameUIController;
-    [SerializeField] GameSpawner gameSpawner;
+    //[SerializeField] GameSpawner gameSpawner;
+    [SerializeField] EnemySpawner enemySpawner;
     [SerializeField] private GameState gameState;
     public GameOwner gameOwner;
     public int gameSeconds;
     bool isDone;
     int gameSecondsHolder;
+
+    
     private void Start()
     {
-        if (!isServer)
-            return;
-
-        if(gameSeconds <= 0)
+        if(isServer)
         {
-            Debug.LogError("Put seconds on the GameController object");
-            return;
+            gameOwner = GameOwner.Server;
+        }
+        else
+        {
+            gameOwner = GameOwner.Client;
         }
     }
     private void Update()
     {
-        if (!isServer)
-            return;
+        if(gameOwner.Equals(GameOwner.None))
+        {
+            if (isServer)
+            {
+                gameOwner = GameOwner.Server;
+            }
+            else
+            {
+                gameOwner = GameOwner.Client;
+            }
+        }
 
-        if (isServer)
-            Debug.Log("im a server");    
-        /*
         if (gameSeconds <= 0)
         {
             Debug.LogError("Put seconds on the GameController object");
@@ -66,7 +74,6 @@ public class GameController : NetworkBehaviour
         {
             UpdateGameStates();
         }
-        */
     }
     private void UpdateGamesettings()
     {
@@ -88,24 +95,10 @@ public class GameController : NetworkBehaviour
                 gameSecondsHolder = gameSeconds;
 
                 gameUIController.ActivateServerUI();
-                //gameSpawner.InitializeEnemySpawn();
+                enemySpawner.InitializeEnemySpawn();
+                //spawn a specific number of enemy at the start of the game
+                enemySpawner.SummonEnemiesAtRandomPoint(2);
 
-                StartCoroutine(StartCountdownOnServer());
-                gameState = GameState.GameStart;
-                isDone = true;
-                break;
-            case GameOwner.Test:
-                gameSecondsHolder = gameSeconds;
-
-                gameSpawner.InitializePlayerSpawn();
-                gameSpawner.InitializeEnemySpawn();
-                gameSpawner.StartSpawningEnemiesLocally(1);
-                gameSpawner.StartSpawningPlayerLocally
-                    (
-                        gameUIController.GetPlayerJoystick
-                    );
-
-                gameUIController.ActivateTestUI();
                 StartCoroutine(StartCountdownOnServer());
                 gameState = GameState.GameStart;
                 isDone = true;
