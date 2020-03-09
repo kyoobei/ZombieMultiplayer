@@ -39,7 +39,6 @@ ScriptsOnlyBuild:
     - UnityEngine.UI.Shadow
     - UnityEngine.UI.Text
     com.unity.multiplayer-hlapi.Runtime.dll:
-    - UnityEngine.Networking.NetworkCallbacks
     - UnityEngine.Networking.NetworkIdentity
     - UnityEngine.Networking.NetworkLobbyPlayer
     - UnityEngine.Networking.NetworkStartPosition
@@ -481,7 +480,7 @@ ScriptsOnlyBuild:
     className: CharacterBase
   - hash:
       serializedVersion: 2
-      Hash: 8d6c2bd18774d73bcb9dbb2274eb6d09
+      Hash: dc7511cc42a72a88cda48c6cb3b50604
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: MyNetworkLobbyUI
@@ -541,7 +540,7 @@ ScriptsOnlyBuild:
     className: CameraController
   - hash:
       serializedVersion: 2
-      Hash: e8113e8bc3e0dfd3c7f8dadbef15cfe8
+      Hash: 5bd9a19c7b5f76c563418e28f48a561b
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: MyNetworkLobbyPlayer
@@ -649,7 +648,7 @@ ScriptsOnlyBuild:
     className: SplashScreen
   - hash:
       serializedVersion: 2
-      Hash: 828b6f7b2fff97c4fdb0bea192387a8d
+      Hash: 08d95201647d9e01777b6af726f94619
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: MyNetworkLobbyManager
@@ -999,4 +998,4 @@ ScriptsOnlyBuild:
   scenePathNames:
   - Assets/ZombieMultiplayer/Scenes/scene_player_lobby.unity
   - Assets/ZombieMultiplayer/Scenes/scene_player_mainGame.unity
-  playerPath: C:/Users/angel/Desktop/Unity/ZombieMultiplayer_Win/ZombieMultiplayer.exe
+  playerPath: C:/Users/AGMartinez/Desktop/UnityBuilds/Tester/ZombieNet/ZombieMultiplayer.exe

@@ -163,9 +163,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8759f4a4c481a164e86be777f9f86e66, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startAsServerButton: {fileID: 0}
-  startAsClientButton: {fileID: 0}
-  numberOfConnectedClients: {fileID: 0}
+  startGame: {fileID: 542079672}
+  readyButton: {fileID: 2133567668}
 --- !u!1 &245829107
 GameObject:
   m_ObjectHideFlags: 0
@@ -332,11 +331,11 @@ MonoBehaviour:
   m_DontDestroyOnLoad: 1
   m_RunInBackground: 1
   m_ScriptCRCCheck: 1
-  m_MaxDelay: 0.01
+  m_MaxDelay: 0.2
   m_LogLevel: 2
   m_PlayerPrefab: {fileID: 0}
   m_AutoCreatePlayer: 1
-  m_PlayerSpawnMethod: 0
+  m_PlayerSpawnMethod: 1
   m_OfflineScene: scene_player_lobby
   m_OnlineScene: 
   m_SpawnPrefabs:
@@ -408,6 +407,7 @@ MonoBehaviour:
   m_PlayScene: scene_player_mainGame
   lobbySlots: []
   serverNetworkDiscovery: {fileID: 299446995}
+  networkLobbyUI: {fileID: 0}
   startAsServerButton: {fileID: 1097350850}
   startAsClientButton: {fileID: 1270689360}
   readyButton: {fileID: 2133567668}
@@ -632,7 +632,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.02931636, y: 0.09751219}
   m_AnchorMax: {x: 0.96700007, y: 0.9024879}
-  m_AnchoredPosition: {x: -1.1000061, y: -0.37999725}
+  m_AnchoredPosition: {x: -1.1000061, y: -0.37999535}
   m_SizeDelta: {x: -4.56, y: 0.05}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &485739723
@@ -1723,7 +1723,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.07367519, y: 0.5614872}
   m_AnchorMax: {x: 0.92100006, y: 0.859}
-  m_AnchoredPosition: {x: -0.19995119, y: 0.9000015}
+  m_AnchoredPosition: {x: -0.19995117, y: 0.9000015}
   m_SizeDelta: {x: 1, y: 1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1682493403
@@ -2525,7 +2525,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2133567669}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2133567666}
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &2133567669
 MonoBehaviour:
   m_ObjectHideFlags: 0

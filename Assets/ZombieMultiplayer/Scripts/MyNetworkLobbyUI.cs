@@ -4,20 +4,44 @@ using UnityEngine;
 using UnityEngine.UI;
 public class MyNetworkLobbyUI : MonoBehaviour
 {
-    [SerializeField] Button startAsServerButton;
-    [SerializeField] Button startAsClientButton;
-    [SerializeField] Text numberOfConnectedClients;
+    //[SerializeField] Button startAsServerButton;
+    //[SerializeField] Button startAsClientButton;
+    //[SerializeField] Text numberOfConnectedClients;
+    [SerializeField] Button startGame;
+    [SerializeField] Button readyButton;
 
-    bool hasBeenSet;
-    private void Update()
+    public delegate void OnStartButtonPressedDelegate();
+    public event OnStartButtonPressedDelegate OnStartButtonPressed;
+
+    public delegate void OnReadyButtonPressedDelegate();
+    public event OnReadyButtonPressedDelegate OnReadyButtonPressed;
+
+    public void AddListenerToReadyButton()
     {
-        if (!hasBeenSet)
-        {
-            if (MyNetworkLobbyManager.singleton != null)
-            {
-
-                hasBeenSet = true;
-            }
-        }
+        RemoveListenterToReadyButton();
+        readyButton.onClick.AddListener(ReadyClient);
+    }
+    public void RemoveListenterToReadyButton()
+    {
+        readyButton.onClick.RemoveListener(ReadyClient);
+    }
+    public void AddListenerToStartButton()
+    {
+        RemoveListenerToStartButton();
+        startGame.onClick.AddListener(StartGame);
+    }
+    public void RemoveListenerToStartButton()
+    {
+        startGame.onClick.RemoveListener(StartGame);
+    }
+    public void StartGame()
+    {
+        Debug.Log("start the game");
+        OnStartButtonPressed?.Invoke();
+    }
+    public void ReadyClient()
+    {
+        Debug.Log("im ready");
+        OnReadyButtonPressed?.Invoke();
     }
 }

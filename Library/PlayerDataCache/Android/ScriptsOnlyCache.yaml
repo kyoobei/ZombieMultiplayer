@@ -10,12 +10,22 @@ ScriptsOnlyBuild:
     - MyNetworkDiscovery
     - MyNetworkLobbyManager
     - MyNetworkLobbyPlayer
+    - MyNetworkLobbyUI
     - NetworkMaker.NMNetworkHandler
     - ObjectPool
     - Player
+    - UnityChan.AutoBlink
+    - UnityChan.FaceUpdate
+    - UnityChan.IdleChanger
     - Zombie
     - ZombieDetection
     - ZombieEater
+    UnityEditor.Graphs.dll:
+    - UnityEditor.Graphs.AnimationBlendTree.Graph
+    - UnityEditor.Graphs.AnimationBlendTree.GraphGUI
+    - UnityEditor.Graphs.AnimationStateMachine.Graph
+    - UnityEditor.Graphs.AnimationStateMachine.GraphGUI
+    - UnityEditor.Graphs.AnimatorControllerTool
     UnityEditor.TestRunner.dll:
     - UnityEditor.TestTools.TestRunner.Api.CallbacksHolder
     - UnityEditor.TestTools.TestRunner.TestListCacheData
@@ -87,6 +97,8 @@ ScriptsOnlyBuild:
       Script: {instanceID: 10052}
     - Class: 114
       Script: {instanceID: 10298}
+    - Class: 114
+      Script: {instanceID: 10344}
     - Class: 114
       Script: {instanceID: 10372}
     - Class: 114
@@ -469,7 +481,7 @@ ScriptsOnlyBuild:
     className: CharacterBase
   - hash:
       serializedVersion: 2
-      Hash: 8d6c2bd18774d73bcb9dbb2274eb6d09
+      Hash: ebed790faac1220552085a10e55d7b24
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: MyNetworkLobbyUI
@@ -529,7 +541,7 @@ ScriptsOnlyBuild:
     className: CameraController
   - hash:
       serializedVersion: 2
-      Hash: e8113e8bc3e0dfd3c7f8dadbef15cfe8
+      Hash: 9bd2dcf0f9c992e6c1d189c90ec0651f
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: MyNetworkLobbyPlayer
@@ -637,7 +649,7 @@ ScriptsOnlyBuild:
     className: SplashScreen
   - hash:
       serializedVersion: 2
-      Hash: 828b6f7b2fff97c4fdb0bea192387a8d
+      Hash: 08d95201647d9e01777b6af726f94619
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: MyNetworkLobbyManager
@@ -987,4 +999,4 @@ ScriptsOnlyBuild:
   scenePathNames:
   - Assets/ZombieMultiplayer/Scenes/scene_player_lobby.unity
   - Assets/ZombieMultiplayer/Scenes/scene_player_mainGame.unity
-  playerPath: C:/Users/angel/Desktop/Unity/testermulti.apk
+  playerPath: C:/Users/AGMartinez/Desktop/UnityBuilds/test1.apk

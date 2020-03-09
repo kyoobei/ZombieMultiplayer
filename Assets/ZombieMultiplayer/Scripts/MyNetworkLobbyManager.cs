@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class MyNetworkLobbyManager : NetworkLobbyManager
 {
     [SerializeField] MyNetworkDiscovery serverNetworkDiscovery;
+    [SerializeField] MyNetworkLobbyUI networkLobbyUI;
     [SerializeField] Button startAsServerButton;
     [SerializeField] Button startAsClientButton;
     [SerializeField] Button readyButton;
@@ -25,6 +26,15 @@ public class MyNetworkLobbyManager : NetworkLobbyManager
     }
     private void Update()
     {
+        if(GameObject.Find("NetworkLobbyUI") != null)
+        {
+            if(networkLobbyUI == null)
+            {
+                networkLobbyUI = GameObject.Find("NetworkLobbyUI").GetComponent<MyNetworkLobbyUI>();
+                networkLobbyUI.AddListenerToStartButton();
+                //networkLobbyUI.OnStartButtonPressed += OnLobbyServerPlayersReady;
+            }
+        }
         numberOfConnectedClients.text = networkConnectionList.Count.ToString();
     }
     public void StartHosting()
@@ -45,6 +55,7 @@ public class MyNetworkLobbyManager : NetworkLobbyManager
         Debug.Log("a client entered: " + conn.connectionId);
         if(!networkConnectionList.Contains(conn))
         {
+            
             networkConnectionList.Add(conn);
         }
     }
