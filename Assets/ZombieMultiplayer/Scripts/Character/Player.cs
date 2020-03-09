@@ -130,8 +130,9 @@ public class Player : CharacterBase
         myTransform.position = Vector3.Lerp(myTransform.position, myPlayerPosition,
             Time.deltaTime * smoothing);
 
-/*        myTransform.rotation = Quaternion.Lerp(myTransform.rotation, myRotation,
-            Time.deltaTime * smoothing);*/
+        myTransform.rotation = Quaternion.Lerp(myTransform.rotation, myRotation,
+            Time.deltaTime * smoothing);
+
     }
     void UpdatePlayerState()
     {
