@@ -14,6 +14,9 @@ ScriptsOnlyBuild:
     - NetworkMaker.NMNetworkHandler
     - ObjectPool
     - Player
+    - UnityChan.AutoBlink
+    - UnityChan.FaceUpdate
+    - UnityChan.IdleChanger
     - Zombie
     - ZombieDetection
     - ZombieEater
@@ -36,8 +39,8 @@ ScriptsOnlyBuild:
     - UnityEngine.UI.Shadow
     - UnityEngine.UI.Text
     com.unity.multiplayer-hlapi.Runtime.dll:
+    - UnityEngine.Networking.NetworkCallbacks
     - UnityEngine.Networking.NetworkIdentity
-    - UnityEngine.Networking.NetworkLobbyPlayer
     - UnityEngine.Networking.NetworkStartPosition
   sceneClasses:
     Assets/ZombieMultiplayer/Scenes/scene_player_lobby.unity:
@@ -79,8 +82,6 @@ ScriptsOnlyBuild:
       Script: {instanceID: 9710}
     - Class: 114
       Script: {instanceID: 9820}
-    - Class: 114
-      Script: {instanceID: 9822}
     - Class: 114
       Script: {instanceID: 9836}
     - Class: 114

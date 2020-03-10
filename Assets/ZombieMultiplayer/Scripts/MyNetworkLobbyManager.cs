@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 public class MyNetworkLobbyManager : NetworkLobbyManager
 {
     [SerializeField] MyNetworkDiscovery serverNetworkDiscovery;
@@ -11,6 +12,8 @@ public class MyNetworkLobbyManager : NetworkLobbyManager
     [SerializeField] Button startAsClientButton;
     [SerializeField] Button readyButton;
     [SerializeField] Text numberOfConnectedClients;
+
+    Scene currentScene;
 
     //only server has this list
     public List<NetworkConnection> networkConnectionList = new List<NetworkConnection>();
@@ -23,6 +26,7 @@ public class MyNetworkLobbyManager : NetworkLobbyManager
         startAsServerButton.onClick.AddListener(StartHosting);
         startAsClientButton.onClick.AddListener(StartClientListen);
 
+        currentScene = SceneManager.GetActiveScene();
     }
     private void Update()
     {
@@ -35,7 +39,8 @@ public class MyNetworkLobbyManager : NetworkLobbyManager
                 //networkLobbyUI.OnStartButtonPressed += OnLobbyServerPlayersReady;
             }
         }
-        numberOfConnectedClients.text = networkConnectionList.Count.ToString();
+        numberOfConnectedClients.text = GetNumberOfConnectedPlayers().ToString();
+        //Debug.Log("scene name: " + currentScene.name);
     }
     public void StartHosting()
     {
@@ -46,27 +51,32 @@ public class MyNetworkLobbyManager : NetworkLobbyManager
     public void StartClientListen()
     {
         serverNetworkDiscovery.StartClientListen();
+       
     }
 
     #region SERVER OVERRIDES
     public override void OnLobbyServerConnect(NetworkConnection conn)
     {
         base.OnLobbyClientConnect(conn);
+        /*
         Debug.Log("a client entered: " + conn.connectionId);
         if(!networkConnectionList.Contains(conn))
         {
             
             networkConnectionList.Add(conn);
         }
+        */
     }
     public override void OnLobbyServerDisconnect(NetworkConnection conn)
     {
         base.OnLobbyServerDisconnect(conn);
+        /*
         Debug.Log("a client disconnected:  " + conn.connectionId);
         if(networkConnectionList.Contains(conn))
         {
             networkConnectionList.Remove(conn);
         }
+        */
     }
     #endregion
     #region CLIENT OVVERIDES
@@ -89,8 +99,22 @@ public class MyNetworkLobbyManager : NetworkLobbyManager
       
     }
     #endregion
+    
+    public int GetNumberOfConnectedPlayers()
+    {
+        int numberOfPlayers = 0;
+        for(int i = 0; i < lobbySlots.Length; i++)
+        {
+            if(lobbySlots[i] != null)
+                numberOfPlayers++;
+        }
+        return numberOfPlayers;
+    }
+    
     public override void OnLobbyServerPlayersReady()
     {
         base.OnLobbyServerPlayersReady();
+            
     }
+    
 }

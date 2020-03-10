@@ -399,7 +399,7 @@ MonoBehaviour:
   m_MaxPlayers: 80
   m_MaxPlayersPerConnection: 1
   m_MinPlayers: 1
-  m_LobbyPlayerPrefab: {fileID: 109868694234586451, guid: 9b5f1a393c2b21a4bbd61bfb5d50dcf8,
+  m_LobbyPlayerPrefab: {fileID: 4573691955813895328, guid: 9b5f1a393c2b21a4bbd61bfb5d50dcf8,
     type: 3}
   m_GamePlayerPrefab: {fileID: 5512538022255702320, guid: 9385bb440b5c5b7428988517c338744c,
     type: 3}
@@ -632,7 +632,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.02931636, y: 0.09751219}
   m_AnchorMax: {x: 0.96700007, y: 0.9024879}
-  m_AnchoredPosition: {x: -1.1000061, y: -0.37999535}
+  m_AnchoredPosition: {x: -1.1000061, y: -0.37999725}
   m_SizeDelta: {x: -4.56, y: 0.05}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &485739723
@@ -1264,8 +1264,7 @@ MonoBehaviour:
   minPlayers: 1
   playerClientPrefab: {fileID: 5512538022255702320, guid: 9385bb440b5c5b7428988517c338744c,
     type: 3}
-  lobbyPrefab: {fileID: 109868694234586451, guid: 9b5f1a393c2b21a4bbd61bfb5d50dcf8,
-    type: 3}
+  lobbyPrefab: {fileID: 0}
   lobbySceneToUse: scene_player_lobby
   gameSceneToUse: scene_player_mainGame
 --- !u!1 &1097350848
