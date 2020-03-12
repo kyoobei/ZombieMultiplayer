@@ -478,7 +478,7 @@ ScriptsOnlyBuild:
     className: CharacterBase
   - hash:
       serializedVersion: 2
-      Hash: ebed790faac1220552085a10e55d7b24
+      Hash: e8fcbb35e880d9d9e2c511525ee8bb77
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: MyNetworkLobbyUI

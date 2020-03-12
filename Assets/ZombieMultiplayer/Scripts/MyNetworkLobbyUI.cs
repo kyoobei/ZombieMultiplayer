@@ -4,10 +4,12 @@ using UnityEngine;
 using UnityEngine.UI;
 public class MyNetworkLobbyUI : MonoBehaviour
 {
-    //[SerializeField] Button startAsServerButton;
-    //[SerializeField] Button startAsClientButton;
-    //[SerializeField] Text numberOfConnectedClients;
+    [Header("Server Lobby UI")]
     [SerializeField] Button startGame;
+    [SerializeField] Text numberOfConnectedClientsText;
+
+    [Header("Client Lobby UI")]
+    [SerializeField] Text clientStatusText;
     [SerializeField] Button readyButton;
 
     public delegate void OnStartButtonPressedDelegate();
@@ -28,20 +30,26 @@ public class MyNetworkLobbyUI : MonoBehaviour
     public void AddListenerToStartButton()
     {
         RemoveListenerToStartButton();
-        startGame.onClick.AddListener(StartGame);
+        startGame.onClick.AddListener(StartGameOnServer);
     }
     public void RemoveListenerToStartButton()
     {
-        startGame.onClick.RemoveListener(StartGame);
+        startGame.onClick.RemoveListener(StartGameOnServer);
     }
-    public void StartGame()
+    public void UpdateConnectedPlayersText(string textToDisplay)
     {
-        Debug.Log("start the game");
+        numberOfConnectedClientsText.text = textToDisplay;
+    }
+    public void UpdateClientStatusText(string textToDisplay)
+    {
+        clientStatusText.text = textToDisplay;
+    }
+    public void StartGameOnServer()
+    {
         OnStartButtonPressed?.Invoke();
     }
     public void ReadyClient()
     {
-        Debug.Log("im ready");
         OnReadyButtonPressed?.Invoke();
     }
 }

@@ -51,6 +51,21 @@ public class ZombieDetection : MonoBehaviour
         {
             hasDetectedAPlayer = false;
         }
+        else if(detectedPlayersList.Count > 0)
+        {
+            CheckDetectedPlayerStatus();
+        }
+    }
+    private void CheckDetectedPlayerStatus()
+    {
+        for (int i = 0; i < detectedPlayersList.Count; i++)
+        {
+            if(detectedPlayersList[i].tag != "Player")
+            {
+                detectedPlayersList.Remove(detectedPlayersList[i]);
+                return;
+            }
+        }
     }
     private void UpdateZombieDetection()
     {

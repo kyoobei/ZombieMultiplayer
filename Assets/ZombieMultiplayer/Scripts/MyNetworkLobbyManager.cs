@@ -15,13 +15,11 @@ public class MyNetworkLobbyManager : NetworkLobbyManager
 
     Scene currentScene;
 
-    //only server has this list
-    public List<NetworkConnection> networkConnectionList = new List<NetworkConnection>();
-     private void Start()
+    private void Start()
     {
         //for mobile devices to not sleep
         Screen.sleepTimeout = SleepTimeout.NeverSleep;
-        StopServer();
+       // StopServer();
 
         startAsServerButton.onClick.AddListener(StartHosting);
         startAsClientButton.onClick.AddListener(StartClientListen);
@@ -30,17 +28,19 @@ public class MyNetworkLobbyManager : NetworkLobbyManager
     }
     private void Update()
     {
-        if(GameObject.Find("NetworkLobbyUI") != null)
-        {
-            if(networkLobbyUI == null)
+     //   if(currentScene.Equals(lobbyScene))
+      //  {
+            if (GameObject.Find("NetworkLobbyUI") != null)
             {
-                networkLobbyUI = GameObject.Find("NetworkLobbyUI").GetComponent<MyNetworkLobbyUI>();
-                networkLobbyUI.AddListenerToStartButton();
-                //networkLobbyUI.OnStartButtonPressed += OnLobbyServerPlayersReady;
+                if (networkLobbyUI == null)
+                {
+                    networkLobbyUI = GameObject.Find("NetworkLobbyUI").GetComponent<MyNetworkLobbyUI>();
+                    networkLobbyUI.AddListenerToStartButton();
+                    //networkLobbyUI.OnStartButtonPressed += OnLobbyServerPlayersReady;
+                }
             }
-        }
-        numberOfConnectedClients.text = GetNumberOfConnectedPlayers().ToString();
-        //Debug.Log("scene name: " + currentScene.name);
+            numberOfConnectedClients.text = GetNumberOfConnectedPlayers().ToString();
+       // }
     }
     public void StartHosting()
     {
@@ -58,25 +58,10 @@ public class MyNetworkLobbyManager : NetworkLobbyManager
     public override void OnLobbyServerConnect(NetworkConnection conn)
     {
         base.OnLobbyClientConnect(conn);
-        /*
-        Debug.Log("a client entered: " + conn.connectionId);
-        if(!networkConnectionList.Contains(conn))
-        {
-            
-            networkConnectionList.Add(conn);
-        }
-        */
     }
     public override void OnLobbyServerDisconnect(NetworkConnection conn)
     {
         base.OnLobbyServerDisconnect(conn);
-        /*
-        Debug.Log("a client disconnected:  " + conn.connectionId);
-        if(networkConnectionList.Contains(conn))
-        {
-            networkConnectionList.Remove(conn);
-        }
-        */
     }
     #endregion
     #region CLIENT OVVERIDES

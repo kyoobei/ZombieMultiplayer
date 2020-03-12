@@ -256,6 +256,7 @@ public class Player : CharacterBase
         if (isLocalPlayer)
         {
             zombieEater.gameObject.SetActive(true);
+            zombieEater = GetComponentInChildren<ZombieEater>();
             monsterLight.SetActive(true);
         }
         else
